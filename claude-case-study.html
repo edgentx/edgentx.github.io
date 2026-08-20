@@ -46,6 +46,12 @@
     .product li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
     .product .live { font-size: 0.875rem; color: var(--muted); margin-bottom: 0; }
     .product .live a { font-weight: 500; }
+    .shots { display: grid; gap: 1.5rem; margin: 0.75rem 0 0.5rem; }
+    .shots figure { margin: 0; }
+    .shots a { display: block; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff; }
+    .shots a:hover { border-color: var(--gold); }
+    .shots img { display: block; width: 100%; max-width: 100%; height: auto; }
+    .shots figcaption { font-size: 0.8125rem; line-height: 1.5; color: var(--muted); margin-top: 0.55rem; max-width: 78ch; }
     .gov { background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 10px; padding: 1.25rem 1.5rem; margin-top: 1.25rem; }
     .gov ul { list-style: none; }
     .gov li { padding-left: 1.1rem; position: relative; margin-bottom: 0.45rem; font-size: 0.9375rem; color: var(--muted-strong); }
@@ -124,6 +130,28 @@
     </ul>
     <h3>Why it matters to a buyer</h3>
     <p>Cockpit is the product Edgent trusts its own revenue to, which is the strongest test a platform passes. Its draft-only rule is structural: the mail adapter has no send capability, and a guard test fails the build if one ever appears. Every AI-assisted action is recorded with the acting identity, and where an agent acts for a person, both identities.</p>
+    <h3>What it looks like</h3>
+    <p>Three screens from the running system, captured on live data. Click any image for the full-size version.</p>
+    <div class="shots">
+      <figure>
+        <a href="img/cockpit-analysis.png" target="_blank" rel="noopener">
+          <img src="img/cockpit-analysis.png" width="1440" height="933" loading="lazy" alt="Cockpit opportunity detail for a Marine Corps Installations Command presolicitation. A funnel score card shows recommendation Watch, capability fit 7.2 out of 10, win probability 35 percent, ROM value 53 million dollars, and board priority 1.3. Below it the AI analysis card shows a PURSUE recommendation with a fit of 8 out of 10, a summary of the solicitation, and expanded sections for reasoning, four key risks, and three action items.">
+        </a>
+        <figcaption>An opportunity with the Claude analysis open in full: the deterministic funnel score sits on top, and under it the model's recommendation, its reasoning, the risks it found, and the action items a person has to work.</figcaption>
+      </figure>
+      <figure>
+        <a href="img/cockpit-proposal-docs.png" target="_blank" rel="noopener">
+          <img src="img/cockpit-proposal-docs.png" width="1282" height="860" loading="lazy" alt="Cockpit proposal documents panel for a state professional licensing modernization RFI. The left panel lists five generated documents with revision numbers: Executive Summary rev 6, Technical Approach rev 8, Cover Letter rev 9, Capability Statement rev 8, Past Performance rev 7, above a Generate proposal documents button and a View PDF bundle button. The right panel shows the generated Technical Approach on Edgent letterhead with the pre-ship linter reporting lint clean and one warning.">
+        </a>
+        <figcaption>Proposal generation: the generated set with its revision history on the left, one section open on the right, and the pre-ship linter's verdict at the top of it, which is the checklist that says whether the draft is fit to send.</figcaption>
+      </figure>
+      <figure>
+        <a href="img/cockpit-queue.png" target="_blank" rel="noopener">
+          <img src="img/cockpit-queue.png" width="1600" height="900" loading="lazy" alt="Cockpit opportunity list filtered to solicitations closing within 90 days, showing 1 to 50 of 1860 records. Each row carries an AI fit score out of 10, a status selector, the title with set-aside and source tags such as SDVOSB channel and SAM, the solicitation number, the agency, and the due date.">
+        </a>
+        <figcaption>The pipeline view, filtered to everything closing inside ninety days, with each record carrying its AI fit score, its status, and the set-aside and source tags the rules run against.</figcaption>
+      </figure>
+    </div>
     <p class="live">Access: <a href="https://cockpit.edgentllc.com">cockpit.edgentllc.com</a> (SSO; walkthrough on request).</p>
   </section>
 
