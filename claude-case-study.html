@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Governed Claude in Production | Edgent LLC</title>
+  <meta name="description" content="How Edgent LLC runs Claude in production across a governed data lakehouse, a federal business development platform, an instructional design pipeline, and its own engineering workflow, with human review gates, tenant isolation, and audit built in.">
+  <link rel="icon" href="https://edgentllc.com/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #1e1e27; --surface: #12121a; --surface-2: #1a1a24; --border: #2a2a38;
+      --text: #e4e4ef; --muted: #8888a0; --muted-strong: #a8a8c0;
+      --accent: #3b82f6; --accent-soft: rgba(59,130,246,0.12);
+      --gold: #d4a843; --green: #4ade80;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; backdrop-filter: blur(12px); background: rgba(30,30,39,0.85); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1000px; margin: 0 auto; padding: 0.875rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1.125rem; font-weight: 700; color: var(--text); }
+    .logo span { color: var(--accent); }
+    .nav-links a { color: var(--muted); font-size: 0.875rem; }
+    main { max-width: 1000px; margin: 0 auto; padding: 7rem 1.5rem 4rem; }
+    .section-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.75rem; line-height: 1.2; }
+    .lede { font-size: 1.0625rem; color: var(--muted-strong); max-width: 68ch; }
+    h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.5rem; margin-top: 3rem; }
+    h3 { font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.4rem; }
+    p { color: var(--muted-strong); max-width: 78ch; margin-bottom: 1rem; }
+    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0 0.5rem; }
+    .fact { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; }
+    .fact .n { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+    .fact .l { font-size: 0.8125rem; color: var(--muted); }
+    .case { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; padding: 1.5rem; margin-top: 1.25rem; }
+    .case p, .case li { font-size: 0.9375rem; }
+    .case ul { list-style: none; margin: 0.5rem 0 0.75rem; }
+    .case li { padding-left: 1.1rem; position: relative; margin-bottom: 0.4rem; color: var(--muted-strong); }
+    .case li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
+    .case .live { font-size: 0.8125rem; color: var(--muted); }
+    .case .live a { font-weight: 500; }
+    .gov { background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 10px; padding: 1.25rem 1.5rem; margin-top: 1.25rem; }
+    .gov ul { list-style: none; }
+    .gov li { padding-left: 1.1rem; position: relative; margin-bottom: 0.45rem; font-size: 0.9375rem; color: var(--muted-strong); }
+    .gov li::before { content: "▸"; position: absolute; left: 0; color: var(--gold); }
+    .honest { border-left-color: var(--green); }
+    .contact { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+    footer { border-top: 1px solid var(--border); }
+    .footer-inner { max-width: 1000px; margin: 0 auto; padding: 1.5rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; font-size: 0.8125rem; color: var(--muted); }
+    .footer-inner a { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="https://edgentllc.com" aria-label="Edgent LLC home">edgent<span>llc</span></a>
+    <div class="nav-links"><a href="https://edgentllc.com">edgentllc.com</a></div>
+  </div>
+</nav>
+
+<main>
+  <div class="section-label">Case Study</div>
+  <h1>Governed Claude in production at Edgent</h1>
+  <p class="lede">Edgent LLC is a service-disabled veteran-owned small business in Bastrop, Texas, serving federal, state, and K-12 buyers. Claude is the production model behind our platform. This page describes four places it runs, the governance pattern shared by all of them, and the engineering workflow that builds them, with links to the live surfaces.</p>
+
+  <div class="facts">
+    <div class="fact"><div class="n">4</div><div class="l">production systems running on Claude</div></div>
+    <div class="fact"><div class="n">16,000+</div><div class="l">automated tests across the platform</div></div>
+    <div class="fact"><div class="n">100%</div><div class="l">of AI-assisted writes behind a human review gate</div></div>
+    <div class="fact"><div class="n">0</div><div class="l">customer data used for model training</div></div>
+  </div>
+
+  <h2>Where Claude runs</h2>
+
+  <div class="case">
+    <h3>1. Natural-language analytics over a governed data lakehouse</h3>
+    <p>VForce360 carries a natural-language analyst surface built on Claude. A user asks a question of a data product in plain English; Claude generates SQL that the platform executes under the user's own permissions, with the query visible, editable, and re-runnable in the conversation. Two mechanisms keep answers honest: every column carries a semantic contract (a role such as count, money, share, or date, plus grain and derivation) that Claude binds against, and an implausible result trips a self-check round before the user sees it. Follow-up questions inherit the prior round's tables and intent, so "what about the top 100" changes a limit, not the dataset.</p>
+    <ul>
+      <li>Authorization is enforced by the platform, not the model: the SQL gate resolves every table reference and checks it against the user's relationship-based grants before execution.</li>
+      <li>A publicly readable instance of the same data platform serves a district transparency dashboard on synthetic data with privacy suppression applied in the pipeline.</li>
+    </ul>
+    <p class="live">Live: <a href="https://rcsd-demo.vforce360.ai/dashboard">rcsd-demo.vforce360.ai/dashboard</a> (public, synthetic data) and <a href="https://rcsd-demo.vforce360.ai/analytics/rcsd-v2">the analyst view</a>.</p>
+  </div>
+
+  <div class="case">
+    <h3>2. Federal business development: analysis, scoring, and proposal generation</h3>
+    <p>Edgent Cockpit ingests public procurement opportunities from federal and state sources into a corpus of more than 16,000 records. Claude analyzes each opportunity for fit against the firm's capability profile, a deterministic funnel scores it, and the two move together so a recommendation never sits over a stale score. For pursuits, Claude generates proposal documents structured from the buyer's own response form, with a checklist that reports what is complete and what still needs the owner. An hourly triage job reads the business mailbox, resolves amendments to their existing opportunities, and drafts a digest. Every outbound email Claude drafts lands as a draft for a human to send; the system has no send capability, and that constraint is enforced by a test that fails the build if one ever appears.</p>
+    <p class="live">Live: <a href="https://cockpit.edgentllc.com">cockpit.edgentllc.com</a> (SSO; demonstration on request).</p>
+  </div>
+
+  <div class="case">
+    <h3>3. Instructional design and learning delivery</h3>
+    <p>Edgent's instructional design practice produces curriculum through an AI-augmented pipeline on Claude, structured on the ADDIE method. Accessibility is a build gate, not a review step: every package is driven through a real browser and scanned for WCAG 2.1 AA conformance at load and after interaction before it can be imported, and a content linter checks house style, structure, code samples, and measurement hooks at authoring time. Learning records land as xAPI statements for measurement of practice change rather than completion alone.</p>
+    <p class="live">Live: <a href="https://acme.lms.vforce360.ai">acme.lms.vforce360.ai</a> (open demonstration shelf, no account needed).</p>
+  </div>
+
+  <div class="case">
+    <h3>4. Claude Code as the engineering system</h3>
+    <p>The platform above is built with Claude Code. Engineering work runs as issue-first, plan-first lanes: a tracked issue exists before any agent is dispatched, acceptance criteria are written as Gherkin scenarios, implementation lands through pull requests that merge only on a fully green run of the complete check set, and deployment rides continuous integration, never a hand-applied change. A post-release verification job exercises every canonical product surface after each deploy and pages the team on any failure. Lessons learned are recorded to a shared engineering memory that every agent recalls before starting non-trivial work, so a problem solved once stays solved.</p>
+    <ul>
+      <li>Multiple Claude Code agents work in parallel lanes across repositories, coordinating through issues and isolated worktrees.</li>
+      <li>The same discipline applies to content: courses, proposals, and email drafts are versioned, linted, and reviewed like code.</li>
+    </ul>
+    <p class="live">Delivery method: <a href="https://edgentllc.com/process.html">edgentllc.com/process</a>. Public code examples: <a href="https://github.com/edgentx/code-examples">github.com/edgentx/code-examples</a>.</p>
+  </div>
+
+  <h2>The governance pattern, shared by all four</h2>
+  <div class="gov">
+    <ul>
+      <li><strong>Human in the loop, enforced by the system.</strong> AI drafts; a person reviews and decides. The review gate is code, not policy.</li>
+      <li><strong>Relationship-based access control.</strong> Every data read the model triggers is authorized against the requesting user's grants. The model never holds broader access than the person asking.</li>
+      <li><strong>Tenant isolation.</strong> Each customer tenant runs on its own dedicated host with its own identity realm and data boundary.</li>
+      <li><strong>Audit.</strong> AI-assisted actions are recorded in a hash-chained audit trail with the acting identity and, where an agent acts for a person, both identities.</li>
+      <li><strong>Privacy by construction.</strong> Small-population suppression in the data pipeline, field-level encryption for sensitive payloads, and no customer data used for training.</li>
+      <li><strong>Deployable inside the customer's boundary.</strong> Kubernetes, government and commercial clouds, or the customer's accredited environment.</li>
+    </ul>
+  </div>
+
+  <h2>What this page is and is not</h2>
+  <div class="gov honest">
+    <ul>
+      <li>Every system above is Edgent-built and Edgent-operated and in production use by Edgent. The public demonstrations serve disclaimed synthetic data at realistic scale.</li>
+      <li>Edgent was formed in 2026. These are not deliveries under contract to an external client, and this page does not present them as such. They are the platforms Edgent offers to government buyers and the evidence of how they are built and governed.</li>
+      <li>Individual team experience at prior employers (federal and state delivery, enterprise platform engineering) attaches to named individuals, not to the company, and is presented that way wherever it appears.</li>
+    </ul>
+  </div>
+
+  <div class="contact">
+    <h3>Contact</h3>
+    <p>Eric G. Diana, Managing Member and Principal Architect. <a href="mailto:eric.diana@edgentllc.com">eric.diana@edgentllc.com</a>, 480-414-5556. Capability statement: <a href="https://edgentllc.com/capability-statement.pdf">edgentllc.com/capability-statement.pdf</a>. SBA certification profile: <a href="https://search.certifications.sba.gov/profile/UZFLEDGS3PC5/1ZSR0">UEI UZFLEDGS3PC5, CAGE 1ZSR0</a>.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 Edgent LLC · SDVOSB · Bastrop, TX</div>
+    <div><a href="https://edgentllc.com">edgentllc.com</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
