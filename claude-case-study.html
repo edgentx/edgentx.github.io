@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Governed Claude in Production | Edgent LLC</title>
-  <meta name="description" content="How Edgent LLC runs Claude in production across a governed data lakehouse, a federal business development platform, an instructional design pipeline, and its own engineering workflow, with human review gates, tenant isolation, and audit built in.">
+  <title>Claude in Production at Edgent | Edgent LLC</title>
+  <meta name="description" content="Three production products built on Claude by Edgent LLC: Askura, the AI conversational survey platform; VForce360, the governed data lakehouse with a natural-language analyst; and Edgent Cockpit, the federal business development platform. How Claude is used in each, how it is governed, and where to try them.">
   <link rel="icon" href="https://edgentllc.com/favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -13,7 +13,7 @@
       --bg: #1e1e27; --surface: #12121a; --surface-2: #1a1a24; --border: #2a2a38;
       --text: #e4e4ef; --muted: #8888a0; --muted-strong: #a8a8c0;
       --accent: #3b82f6; --accent-soft: rgba(59,130,246,0.12);
-      --gold: #d4a843; --green: #4ade80;
+      --gold: #d4a843; --green: #4ade80; --violet: #a78bfa;
     }
     body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
     a { color: var(--accent); text-decoration: none; }
@@ -28,19 +28,24 @@
     h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.75rem; line-height: 1.2; }
     .lede { font-size: 1.0625rem; color: var(--muted-strong); max-width: 68ch; }
     h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.5rem; margin-top: 3rem; }
-    h3 { font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.4rem; }
+    h3 { font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.4rem; margin-top: 1.25rem; }
     p { color: var(--muted-strong); max-width: 78ch; margin-bottom: 1rem; }
     .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0 0.5rem; }
     .fact { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; }
     .fact .n { font-size: 1.5rem; font-weight: 700; color: var(--text); }
     .fact .l { font-size: 0.8125rem; color: var(--muted); }
-    .case { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; padding: 1.5rem; margin-top: 1.25rem; }
-    .case p, .case li { font-size: 0.9375rem; }
-    .case ul { list-style: none; margin: 0.5rem 0 0.75rem; }
-    .case li { padding-left: 1.1rem; position: relative; margin-bottom: 0.4rem; color: var(--muted-strong); }
-    .case li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
-    .case .live { font-size: 0.8125rem; color: var(--muted); }
-    .case .live a { font-weight: 500; }
+    .product { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; margin-top: 1.5rem; }
+    .product.askura { border-top: 3px solid var(--violet); }
+    .product.vforce { border-top: 3px solid var(--accent); }
+    .product.cockpit { border-top: 3px solid var(--gold); }
+    .product .kicker { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .product h2 { margin-top: 0.25rem; }
+    .product p, .product li { font-size: 0.9375rem; }
+    .product ul { list-style: none; margin: 0.5rem 0 0.75rem; }
+    .product li { padding-left: 1.1rem; position: relative; margin-bottom: 0.45rem; color: var(--muted-strong); }
+    .product li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
+    .product .live { font-size: 0.875rem; color: var(--muted); margin-bottom: 0; }
+    .product .live a { font-weight: 500; }
     .gov { background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 10px; padding: 1.25rem 1.5rem; margin-top: 1.25rem; }
     .gov ul { list-style: none; }
     .gov li { padding-left: 1.1rem; position: relative; margin-bottom: 0.45rem; font-size: 0.9375rem; color: var(--muted-strong); }
@@ -63,68 +68,86 @@
 
 <main>
   <div class="section-label">Case Study</div>
-  <h1>Governed Claude in production at Edgent</h1>
-  <p class="lede">Edgent LLC is a service-disabled veteran-owned small business in Bastrop, Texas, serving federal, state, and K-12 buyers. Claude is the production model behind our platform. This page describes four places it runs, the governance pattern shared by all of them, and the engineering workflow that builds them, with links to the live surfaces.</p>
+  <h1>Claude in production at Edgent: three products</h1>
+  <p class="lede">Edgent LLC is a service-disabled veteran-owned small business in Bastrop, Texas, serving federal, state, and K-12 buyers. Claude is the model inside three products Edgent builds and operates: Askura, a conversational survey platform; VForce360, a governed data lakehouse with a natural-language analyst; and Edgent Cockpit, a business development platform. This page describes what Claude does in each, how every Claude call is governed, and where each product can be tried.</p>
 
   <div class="facts">
-    <div class="fact"><div class="n">4</div><div class="l">production systems running on Claude</div></div>
+    <div class="fact"><div class="n">3</div><div class="l">products in production on Claude</div></div>
+    <div class="fact"><div class="n">2</div><div class="l">open demos, no sign-in needed</div></div>
     <div class="fact"><div class="n">16,000+</div><div class="l">automated tests across the platform</div></div>
-    <div class="fact"><div class="n">100%</div><div class="l">of AI-assisted writes behind a human review gate</div></div>
     <div class="fact"><div class="n">0</div><div class="l">customer data used for model training</div></div>
   </div>
 
-  <h2>Where Claude runs</h2>
-
-  <div class="case">
-    <h3>1. Natural-language analytics over a governed data lakehouse</h3>
-    <p>VForce360 carries a natural-language analyst surface built on Claude. A user asks a question of a data product in plain English; Claude generates SQL that the platform executes under the user's own permissions, with the query visible, editable, and re-runnable in the conversation. Two mechanisms keep answers honest: every column carries a semantic contract (a role such as count, money, share, or date, plus grain and derivation) that Claude binds against, and an implausible result trips a self-check round before the user sees it. Follow-up questions inherit the prior round's tables and intent, so "what about the top 100" changes a limit, not the dataset.</p>
+  <section class="product askura" aria-labelledby="askura">
+    <div class="kicker">Product 1</div>
+    <h2 id="askura">Askura: surveys that talk back</h2>
+    <p>Askura is an AI-native survey platform, an alternative to Qualtrics, SurveyMonkey, and Typeform. Instead of a form, every survey runs as an adaptive conversation over web chat or SMS. Claude is in the product at three points.</p>
+    <h3>What Claude does</h3>
     <ul>
-      <li>Authorization is enforced by the platform, not the model: the SQL gate resolves every table reference and checks it against the user's relationship-based grants before execution.</li>
-      <li>A publicly readable instance of the same data platform serves a district transparency dashboard on synthetic data with privacy suppression applied in the pipeline.</li>
+      <li><strong>Authoring.</strong> A researcher describes what they want to learn. Claude drafts the questions, the branching logic, and the translations; the researcher refines and publishes. Authoring a survey takes seconds instead of an afternoon.</li>
+      <li><strong>The conversation.</strong> Each respondent talks to a Claude-driven interviewer that asks the authored questions, follows up on vague or incomplete answers, and keeps the exchange going until it has what the question needs. The output is structured data, not transcripts: every answer maps back to the instrument so the results are analyzable.</li>
+      <li><strong>Analysis.</strong> As replies land, Claude summarizes themes and sentiment and supports follow-the-thread exploration across responses, so findings are available the moment fielding closes rather than after a coding pass.</li>
     </ul>
-    <p class="live">Live: <a href="https://rcsd-demo.vforce360.ai/dashboard">rcsd-demo.vforce360.ai/dashboard</a> (public, synthetic data) and <a href="https://rcsd-demo.vforce360.ai/analytics/rcsd-v2">the analyst view</a>.</p>
-  </div>
+    <h3>Why it matters to a buyer</h3>
+    <p>Response quality rises when people talk instead of tick boxes, and reach widens when the survey meets them on SMS with no app and no login (HELP and STOP handled out of the box). Delivery is white-labeled per tenant down to the respondent's screen, and cohorts can be targeted by segment and risk band. A live public deployment collects school-climate survey responses for a district transparency program, with the results landing in VForce360 and publishing to a public dashboard with small-population suppression applied in the pipeline.</p>
+    <p class="live">Try it: <a href="https://askura.ai">askura.ai</a>. Downstream results, live on synthetic data: <a href="https://rcsd-demo.vforce360.ai/dashboard">rcsd-demo.vforce360.ai/dashboard</a>.</p>
+  </section>
 
-  <div class="case">
-    <h3>2. Federal business development: analysis, scoring, and proposal generation</h3>
-    <p>Edgent Cockpit ingests public procurement opportunities from federal and state sources into a corpus of more than 16,000 records. Claude analyzes each opportunity for fit against the firm's capability profile, a deterministic funnel scores it, and the two move together so a recommendation never sits over a stale score. For pursuits, Claude generates proposal documents structured from the buyer's own response form, with a checklist that reports what is complete and what still needs the owner. An hourly triage job reads the business mailbox, resolves amendments to their existing opportunities, and drafts a digest. Every outbound email Claude drafts lands as a draft for a human to send; the system has no send capability, and that constraint is enforced by a test that fails the build if one ever appears.</p>
-    <p class="live">Live: <a href="https://cockpit.edgentllc.com">cockpit.edgentllc.com</a> (SSO; demonstration on request).</p>
-  </div>
-
-  <div class="case">
-    <h3>3. Instructional design and learning delivery</h3>
-    <p>Edgent's instructional design practice produces curriculum through an AI-augmented pipeline on Claude, structured on the ADDIE method. Accessibility is a build gate, not a review step: every package is driven through a real browser and scanned for WCAG 2.1 AA conformance at load and after interaction before it can be imported, and a content linter checks house style, structure, code samples, and measurement hooks at authoring time. Learning records land as xAPI statements for measurement of practice change rather than completion alone.</p>
-    <p class="live">Live: <a href="https://acme.lms.vforce360.ai">acme.lms.vforce360.ai</a> (open demonstration shelf, no account needed).</p>
-  </div>
-
-  <div class="case">
-    <h3>4. Claude Code as the engineering system</h3>
-    <p>The platform above is built with Claude Code. Engineering work runs as issue-first, plan-first lanes: a tracked issue exists before any agent is dispatched, acceptance criteria are written as Gherkin scenarios, implementation lands through pull requests that merge only on a fully green run of the complete check set, and deployment rides continuous integration, never a hand-applied change. A post-release verification job exercises every canonical product surface after each deploy and pages the team on any failure. Lessons learned are recorded to a shared engineering memory that every agent recalls before starting non-trivial work, so a problem solved once stays solved.</p>
+  <section class="product vforce" aria-labelledby="vforce">
+    <div class="kicker">Product 2</div>
+    <h2 id="vforce">VForce360: a governed lakehouse with a natural-language analyst</h2>
+    <p>VForce360 is a governed data lakehouse that turns documents, including scanned paper, into queryable tables, with a catalog, lineage, data quality, relationship-based access control, and governed SQL over JDBC and ODBC. The open demo tenant serves a real scanned legal filing and runs live queries on page load. Claude is the analyst on top of that platform.</p>
+    <h3>What Claude does</h3>
     <ul>
-      <li>Multiple Claude Code agents work in parallel lanes across repositories, coordinating through issues and isolated worktrees.</li>
-      <li>The same discipline applies to content: courses, proposals, and email drafts are versioned, linted, and reviewed like code.</li>
+      <li><strong>Questions to governed SQL.</strong> A user asks a data product a question in plain English. Claude generates SQL that the platform executes under the user's own permissions. The query is shown, editable, and re-runnable inside the conversation, and an edited query goes back to Claude for further analysis with the change shown as a diff.</li>
+      <li><strong>Semantic grounding.</strong> Every column carries a semantic contract (role such as count, money, share, or date; grain; keys; derivation; caveats) that Claude binds against, so a dollar threshold cannot land on a count column. Column descriptions authored in the catalog feed the same grounding.</li>
+      <li><strong>Self-check and multi-round.</strong> An implausible result trips a correction round with a diagnosis written for the model before the user sees it; an empty result is probed rather than explained away. Follow-up questions inherit the prior round's tables and intent, so "what about the top 100" changes a limit, not the dataset.</li>
+      <li><strong>Document intelligence.</strong> Scanned and uploaded documents are classified and extracted with vision-language models behind a human review gate; reviewed records land as tables the analyst can query.</li>
+      <li><strong>Charts and dashboards.</strong> Results render as tables and charts; charts can be promoted into the BI layer, and a conversation can be turned into a dashboard.</li>
     </ul>
-    <p class="live">Delivery method: <a href="https://edgentllc.com/process.html">edgentllc.com/process</a>. Public code examples: <a href="https://github.com/edgentx/code-examples">github.com/edgentx/code-examples</a>.</p>
-  </div>
+    <h3>Why it matters to a buyer</h3>
+    <p>Authorization is enforced by the platform, never by the model: the SQL gate resolves every table a statement reads and checks it against the requesting user's grants before anything executes, and a statement it cannot resolve is refused, not run. That is what makes natural-language access safe over FERPA, HIPAA, and CJIS-class data. The same platform hosts the district transparency dashboard linked above, with its audit chain's verification shown in the interface.</p>
+    <p class="live">Try it: <a href="https://vforce360.ai">vforce360.ai</a> (open demo, no sign-in). Public analyst view on synthetic district data: <a href="https://rcsd-demo.vforce360.ai/analytics/rcsd-v2">rcsd-demo.vforce360.ai/analytics/rcsd-v2</a>.</p>
+  </section>
 
-  <h2>The governance pattern, shared by all four</h2>
+  <section class="product cockpit" aria-labelledby="cockpit">
+    <div class="kicker">Product 3</div>
+    <h2 id="cockpit">Edgent Cockpit: business development run on Claude</h2>
+    <p>Cockpit is Edgent's operating platform for public-sector business development, used every working day by the firm's own team. It ingests opportunities from federal and state procurement sources into a corpus of more than 16,000 records and carries them through analysis, pursuit, proposal, and CRM.</p>
+    <h3>What Claude does</h3>
+    <ul>
+      <li><strong>Opportunity analysis.</strong> Claude reads each opportunity against the firm's capability profile and produces a structured fit analysis; a deterministic funnel scores it, and the two are regenerated together so a recommendation never sits over a stale score.</li>
+      <li><strong>Proposal generation.</strong> For a pursuit, Claude derives the document structure from the buyer's own response form and drafts each section, then produces an honest checklist of what is complete and what still needs the owner: references, signatures, registrations, pricing. The PDF bundle renders in the buyer's form order on the firm's letterhead.</li>
+      <li><strong>Research to CRM.</strong> Research documents are read into people and office records with provenance and a confidence ladder, so relationship work starts from what is already known.</li>
+      <li><strong>Inbox triage and drafting.</strong> An hourly job reads the business mailbox, classifies solicitation notices and amendments, resolves amendments to their existing opportunities (never duplicating), judges fit, and drafts a digest. Outreach email is drafted into the owner's mailbox with the right signature in plain, human form.</li>
+      <li><strong>Work queues.</strong> Rules over the corpus (for example, set-aside opportunities under a value threshold closing soon with no relationship touch) materialize into durable work queues with claims, leases, and an event trail.</li>
+    </ul>
+    <h3>Why it matters to a buyer</h3>
+    <p>Cockpit is the product Edgent trusts its own revenue to, which is the strongest test a platform passes. Its draft-only rule is structural: the mail adapter has no send capability, and a guard test fails the build if one ever appears. Every AI-assisted action is recorded with the acting identity, and where an agent acts for a person, both identities.</p>
+    <p class="live">Access: <a href="https://cockpit.edgentllc.com">cockpit.edgentllc.com</a> (SSO; walkthrough on request).</p>
+  </section>
+
+  <h2>How every Claude call is governed</h2>
   <div class="gov">
     <ul>
-      <li><strong>Human in the loop, enforced by the system.</strong> AI drafts; a person reviews and decides. The review gate is code, not policy.</li>
-      <li><strong>Relationship-based access control.</strong> Every data read the model triggers is authorized against the requesting user's grants. The model never holds broader access than the person asking.</li>
-      <li><strong>Tenant isolation.</strong> Each customer tenant runs on its own dedicated host with its own identity realm and data boundary.</li>
-      <li><strong>Audit.</strong> AI-assisted actions are recorded in a hash-chained audit trail with the acting identity and, where an agent acts for a person, both identities.</li>
-      <li><strong>Privacy by construction.</strong> Small-population suppression in the data pipeline, field-level encryption for sensitive payloads, and no customer data used for training.</li>
-      <li><strong>Deployable inside the customer's boundary.</strong> Kubernetes, government and commercial clouds, or the customer's accredited environment.</li>
+      <li><strong>Human in the loop, enforced by the system.</strong> Claude drafts, extracts, or proposes; a person reviews and decides. Where the review gate matters (document extraction, outbound mail, proposal submission) it is code the product cannot bypass, not a policy memo.</li>
+      <li><strong>The model never holds more access than the user.</strong> Data reads triggered by Claude are authorized against the requesting user's relationship-based grants, and unresolvable requests are refused.</li>
+      <li><strong>Tenant isolation.</strong> Each customer tenant runs on its own dedicated host with its own identity realm and data boundary; white-label delivery is per tenant.</li>
+      <li><strong>Audit.</strong> AI-assisted actions land in a hash-chained audit trail; the public dashboard shows the chain's verification in its interface.</li>
+      <li><strong>Privacy by construction.</strong> Small-population suppression in the pipeline, field-level and event-payload encryption for sensitive data, no customer data used for training.</li>
+      <li><strong>Deployable inside the customer's boundary.</strong> Kubernetes on government or commercial cloud, or the customer's own accredited environment.</li>
     </ul>
   </div>
+
+  <h2>Built with Claude Code</h2>
+  <p>All three products are engineered with Claude Code. Work runs as issue-first, plan-first lanes: a tracked issue exists before any agent is dispatched, acceptance criteria are written as Gherkin scenarios, pull requests merge only on a fully green run of the complete check set, and deployment rides continuous integration. A post-release verification job exercises every canonical product surface after each deploy and pages the team on any failure. Multiple Claude Code agents work in parallel across repositories, coordinated through issues and isolated worktrees, and lessons learned are recorded to a shared engineering memory every agent recalls before non-trivial work. The same discipline applies to content: courses, proposals, and outreach drafts are versioned, linted, and reviewed like code.</p>
+  <p>Delivery method: <a href="https://edgentllc.com/process.html">edgentllc.com/process</a>. Public code examples: <a href="https://github.com/edgentx/code-examples">github.com/edgentx/code-examples</a>.</p>
 
   <h2>What this page is and is not</h2>
   <div class="gov honest">
     <ul>
-      <li>Every system above is Edgent-built and Edgent-operated and in production use by Edgent. The public demonstrations serve disclaimed synthetic data at realistic scale.</li>
-      <li>Edgent was formed in 2026. These are not deliveries under contract to an external client, and this page does not present them as such. They are the platforms Edgent offers to government buyers and the evidence of how they are built and governed.</li>
-      <li>Individual team experience at prior employers (federal and state delivery, enterprise platform engineering) attaches to named individuals, not to the company, and is presented that way wherever it appears.</li>
+      <li>All three products are Edgent-built and Edgent-operated and in production: Askura and VForce360 as public products with open demos, Cockpit as the platform Edgent runs its own business on. The public demonstrations serve disclaimed synthetic data at realistic scale.</li>
+      <li>Edgent was formed in 2026. These are not deliveries under contract to an external client, and this page does not present them as such. Individual team experience at prior employers attaches to named individuals, not to the company.</li>
     </ul>
   </div>
 
