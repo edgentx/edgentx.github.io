@@ -1,0 +1,475 @@
+1
+00:00:00,000 --> 00:00:06,706
+This is a walkthrough of VForce360, the governed
+data lakehouse Edgent builds and operates.
+
+2
+00:00:06,706 --> 00:00:12,417
+Everything you are about to see runs on an open
+demonstration tenant with no sign in, so you can
+
+3
+00:00:12,417 --> 00:00:18,129
+reproduce all of it yourself at acme dot vforce360
+dot ai.
+
+4
+00:00:18,129 --> 00:00:19,750
+The data is synthetic.
+
+5
+00:00:20,000 --> 00:00:22,890
+No sign in. No account.
+
+6
+00:00:22,890 --> 00:00:29,799
+The platform knows this session as an anonymous
+subject with read grants over the demonstration data
+
+7
+00:00:29,799 --> 00:00:36,709
+products,
+
+8
+00:00:36,709 --> 00:00:44,750
+and every screen you see is what that subject is
+allowed to see.
+
+9
+00:00:45,000 --> 00:00:51,012
+The catalog is the map. One tenant, four catalogs.
+
+10
+00:00:51,012 --> 00:01:00,992
+Gold carries 29 curated tables, silver carries the
+21 conformed tables behind them,
+
+11
+00:01:00,992 --> 00:01:09,048
+and cedms carries the pages that came out of the
+document pipeline.
+
+12
+00:01:09,048 --> 00:01:19,750
+Bronze, silver, gold and the audit catalog are all
+first class objects here, not folders.
+
+13
+00:01:20,000 --> 00:01:29,462
+Open one table and you get the whole record of it.
+The columns and their types. Real sample rows.
+
+14
+00:01:29,462 --> 00:01:38,437
+And the quality tab, which on this table says
+plainly that no rules are declared against it.
+
+15
+00:01:38,437 --> 00:01:44,436
+That is the right answer to give. Absence of a rule
+is not a pass, and a platform that hid that would be
+
+16
+00:01:44,436 --> 00:01:50,435
+worse, not better.
+
+17
+00:01:50,435 --> 00:01:56,483
+Then the lineage, which is the part that matters for
+an audit.
+
+18
+00:01:56,483 --> 00:02:03,117
+Seven tables, seven edges, and every edge resolves
+to the run or the transform that produced it. Nobody
+
+19
+00:02:03,117 --> 00:02:09,750
+typed this graph. It is derived.
+
+20
+00:02:10,000 --> 00:02:12,886
+Now the analyst.
+
+21
+00:02:12,886 --> 00:02:23,527
+This is a plain language question against a governed
+table,
+
+22
+00:02:23,527 --> 00:02:34,169
+and the answer comes back as rows, not as prose
+about rows.
+
+23
+00:02:34,169 --> 00:02:44,449
+Ten rows of monthly attendance: the school, the
+school year, the month, days possible, days present,
+
+24
+00:02:44,449 --> 00:02:54,730
+and the rate.
+
+25
+00:02:54,730 --> 00:03:02,125
+And the SQL is shown. It is always shown.
+
+26
+00:03:02,125 --> 00:03:14,750
+You never have to trust a number you cannot trace
+back to a statement.
+
+27
+00:03:15,000 --> 00:03:24,382
+The follow up names no table. It says what about the
+top ten.
+
+28
+00:03:24,382 --> 00:03:37,301
+The analyst carries the context forward, resolves it
+to the same table, and answers.
+
+29
+00:03:37,301 --> 00:03:49,605
+It also picked a chart on its own, because the shape
+of the result is a ranking.
+
+30
+00:03:49,605 --> 00:03:55,142
+And here is the SQL it actually ran.
+
+31
+00:03:55,142 --> 00:04:03,909
+Select school id, school year, attendance rate, from
+acme gold attendance by month, ordered descending,
+
+32
+00:04:03,909 --> 00:04:12,675
+limit ten.
+
+33
+00:04:12,675 --> 00:04:19,750
+That is a statement a data steward can review.
+
+34
+00:04:20,000 --> 00:04:27,660
+The conversation is not a dead end.
+
+35
+00:04:27,660 --> 00:04:45,607
+Open in SQL Editor hands you the exact statement,
+and from there it is your query.
+
+36
+00:04:45,607 --> 00:04:52,392
+Change the limit, run it again.
+
+37
+00:04:52,392 --> 00:05:06,399
+Same anonymous session, same authorization path,
+same warehouse.
+
+38
+00:05:06,399 --> 00:05:19,750
+The analyst is a way into the platform, not a wall
+around it.
+
+39
+00:05:24,000 --> 00:05:33,649
+This is the compliance ledger, and this is what it
+tells an anonymous caller.
+
+40
+00:05:33,649 --> 00:05:42,171
+Quote: this data is governed. The platform refused
+the request before identity was even a question, so
+
+41
+00:05:42,171 --> 00:05:50,692
+nothing was sent to this browser.
+
+42
+00:05:50,692 --> 00:06:00,717
+That is the control working, and it is worth being
+precise about where it lives.
+
+43
+00:06:00,717 --> 00:06:09,615
+The refusal did not come from the model. The model
+was never consulted.
+
+44
+00:06:09,615 --> 00:06:13,750
+The platform refused at the door.
+
+45
+00:06:14,000 --> 00:06:27,688
+Access is relationship based, enforced by OpenFGA,
+and it is the same decision engine everywhere.
+
+46
+00:06:27,688 --> 00:06:37,424
+Ask the permissions screen for grants you do not own
+and it declines.
+
+47
+00:06:37,424 --> 00:06:44,762
+Ask for the connector configuration and it declines.
+
+48
+00:06:44,762 --> 00:06:54,286
+Ask the analyst for a table the session cannot
+authorize, and the SQL gate declines before the
+
+49
+00:06:54,286 --> 00:07:03,811
+query runs, with the reason written out.
+
+50
+00:07:03,811 --> 00:07:08,750
+Four different doors, one decision.
+
+51
+00:07:09,000 --> 00:07:13,607
+Governance is not only table level.
+
+52
+00:07:13,607 --> 00:07:21,242
+Policies and column semantics attach to the object
+itself,
+
+53
+00:07:21,242 --> 00:07:29,996
+so a masking or classification decision travels with
+the column into every query, every notebook, and
+
+54
+00:07:29,996 --> 00:07:38,750
+every answer the analyst gives.
+
+55
+00:07:43,000 --> 00:07:47,882
+285 scanned pages across 18 batches.
+
+56
+00:07:47,882 --> 00:07:56,018
+Every page has been read, classified, summarized and
+scored.
+
+57
+00:07:56,018 --> 00:08:00,222
+Look at the disposition column.
+
+58
+00:08:00,222 --> 00:08:08,494
+The platform did not classify everything and declare
+victory.
+
+59
+00:08:08,494 --> 00:08:18,122
+It sorted its own output into what it is confident
+about and what a person has to look at, and the
+
+60
+00:08:18,122 --> 00:08:27,750
+confidence score is the thing that decides.
+
+61
+00:08:28,000 --> 00:08:30,355
+This is the gate.
+
+62
+00:08:30,355 --> 00:08:38,668
+Eighty pages are sitting in a human review queue
+right now, each one with the reason it landed there
+
+63
+00:08:38,668 --> 00:08:46,981
+written next to it.
+
+64
+00:08:46,981 --> 00:08:54,185
+Segmentation fallback. Low confidence transcription.
+
+65
+00:08:54,185 --> 00:09:02,775
+A person accepts or reprocesses, and the decision is
+recorded.
+
+66
+00:09:02,775 --> 00:09:12,750
+Nothing crosses from machine output to trusted
+record without that step.
+
+67
+00:09:13,000 --> 00:09:16,700
+And here is where it lands.
+
+68
+00:09:16,700 --> 00:09:23,827
+The same pages, as a queryable table in the catalog.
+
+69
+00:09:23,827 --> 00:09:34,723
+22 columns carrying the extracted text, the summary,
+the document type, the confidence, the review
+
+70
+00:09:34,723 --> 00:09:45,618
+disposition and its reason, and a sha256 of the
+source page.
+
+71
+00:09:45,618 --> 00:09:52,882
+The scan is now data you can join to, query and
+cite.
+
+72
+00:09:52,882 --> 00:10:02,750
+The hash is how you prove the row still refers to
+the page it came from.
+
+73
+00:10:03,000 --> 00:10:10,697
+Which means you can ask about the paper the same way
+you ask about the numbers.
+
+74
+00:10:10,697 --> 00:10:15,860
+How many pages are still waiting on a person.
+Eighty.
+
+75
+00:10:15,860 --> 00:10:24,239
+That is the same eighty you just saw in the review
+queue, and it is not a coincidence.
+
+76
+00:10:24,239 --> 00:10:32,131
+The queue and the analyst are reading the same
+table, so they cannot drift apart.
+
+77
+00:10:32,131 --> 00:10:37,440
+Same analyst, same governed path, same SQL shown.
+There is no separate document product to buy and
+
+78
+00:10:37,440 --> 00:10:42,750
+integrate.
+
+79
+00:10:47,000 --> 00:10:53,317
+Ten flows on this tenant, and the engine behind them
+is live.
+
+80
+00:10:53,317 --> 00:10:59,945
+Records intake, FOIA request intake, 311 service
+request routing, grant application triage, a nightly
+
+81
+00:10:59,945 --> 00:11:06,572
+rollup, a retention sweep.
+
+82
+00:11:06,572 --> 00:11:11,750
+Triggers are schedules, HTTP endpoints, or manual.
+
+83
+00:11:12,000 --> 00:11:16,785
+Open one and the graph is not a picture of a
+pipeline. It is the pipeline, read live from the
+
+84
+00:11:16,785 --> 00:11:21,571
+engine.
+
+85
+00:11:21,571 --> 00:11:27,541
+Collect the day's counters, summarize them, then a
+real branch.
+
+86
+00:11:27,541 --> 00:11:32,611
+If the backlog is healthy, publish to the morning
+dashboard. If it is not, escalate to the duty
+
+87
+00:11:32,611 --> 00:11:37,680
+supervisor.
+
+88
+00:11:37,680 --> 00:11:46,114
+And here is the run history. Three nights, three
+successes, two in the morning each time.
+
+89
+00:11:46,114 --> 00:11:53,932
+This is the integration surface: a flow reaches a
+source through a connector, lands it in bronze, and
+
+90
+00:11:53,932 --> 00:12:01,750
+the catalog picks the new fields up without a schema
+migration.
+
+91
+00:12:02,000 --> 00:12:08,444
+Twenty validation rules across the catalog, 99.3
+percent passing, with the timestamp of the last
+
+92
+00:12:08,444 --> 00:12:14,888
+evaluation on the page.
+
+93
+00:12:14,888 --> 00:12:22,299
+Data quality is not a report somebody writes at the
+end of a quarter.
+
+94
+00:12:22,299 --> 00:12:31,750
+It is a check that runs against live rows and is
+visible to anyone who opens the tenant.
+
+95
+00:12:32,000 --> 00:12:36,489
+And the results pin to a dashboard.
+
+96
+00:12:36,489 --> 00:12:44,119
+Built on the same governed tables the analyst
+queries, so the dashboard and the answer cannot
+
+97
+00:12:44,119 --> 00:12:51,750
+disagree with each other.
+
+98
+00:12:52,000 --> 00:12:58,420
+VForce360 is built and operated by Edgent LLC, a
+service disabled veteran owned small business in
+
+99
+00:12:58,420 --> 00:13:04,841
+Bastrop, Texas.
+
+100
+00:13:04,841 --> 00:13:10,807
+Everything in this walkthrough is running on
+synthetic data on an open tenant, and the link is on
+
+101
+00:13:10,807 --> 00:13:16,773
+screen.
+
+102
+00:13:16,773 --> 00:13:23,705
+Nothing was staged for the recording and nothing was
+sped up.
+
+103
+00:13:23,705 --> 00:13:30,750
+Eric Diana. eric dot diana at edgentllc dot com. 480
+414 5556.

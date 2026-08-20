@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VForce360 Walkthrough | Edgent LLC</title>
+  <meta name="description" content="A recorded walkthrough of VForce360, the governed data lakehouse Edgent LLC builds and operates: catalog and lineage, a natural-language analyst that shows its SQL, platform-enforced authorization, document intelligence behind a human review gate, and orchestration. Recorded on the open demonstration tenant with no sign-in. Captioned.">
+  <link rel="icon" href="https://edgentllc.com/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #1e1e27; --surface: #12121a; --surface-2: #1a1a24; --border: #2a2a38;
+      --text: #e4e4ef; --muted: #8888a0; --muted-strong: #a8a8c0;
+      --accent: #3b82f6; --accent-soft: rgba(59,130,246,0.12);
+      --gold: #d4a843; --green: #4ade80; --violet: #a78bfa;
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; backdrop-filter: blur(12px); background: rgba(30,30,39,0.85); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1000px; margin: 0 auto; padding: 0.875rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1.125rem; font-weight: 700; color: var(--text); }
+    .logo span { color: var(--accent); }
+    .nav-links a { color: var(--muted); font-size: 0.875rem; }
+    main { max-width: 1000px; margin: 0 auto; padding: 7rem 1.5rem 4rem; }
+    .section-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.75rem; line-height: 1.2; }
+    .lede { font-size: 1.0625rem; color: var(--muted-strong); max-width: 68ch; }
+    h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.5rem; margin-top: 3rem; }
+    h3 { font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.4rem; margin-top: 1.25rem; }
+    p { color: var(--muted-strong); max-width: 78ch; margin-bottom: 1rem; }
+    .player { margin: 2rem 0 0.75rem; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #000; }
+    .player video { display: block; width: 100%; height: auto; background: #000; }
+    .playerbar { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center; font-size: 0.875rem; color: var(--muted); margin-bottom: 2rem; }
+    .playerbar .dl { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0.8rem; border: 1px solid var(--border); border-radius: 7px; background: var(--surface); color: var(--muted-strong); font-weight: 500; }
+    .playerbar .dl:hover { border-color: var(--accent); color: var(--text); text-decoration: none; }
+    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0 0.5rem; }
+    .fact { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; }
+    .fact .n { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+    .fact .l { font-size: 0.8125rem; color: var(--muted); }
+    .chapters { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9375rem; }
+    .chapters th { text-align: left; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 0.5rem 0.9rem 0.5rem 0; border-bottom: 1px solid var(--border); }
+    .chapters td { padding: 0.62rem 0.9rem 0.62rem 0; border-bottom: 1px solid var(--border); color: var(--muted-strong); vertical-align: top; }
+    .chapters td:first-child { color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 500; }
+    .chapters td strong { color: var(--text); font-weight: 600; }
+    .gov { background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 10px; padding: 1.25rem 1.5rem; margin-top: 1.25rem; }
+    .gov ul { list-style: none; }
+    .gov li { padding-left: 1.1rem; position: relative; margin-bottom: 0.45rem; font-size: 0.9375rem; color: var(--muted-strong); }
+    .gov li::before { content: "\25B8"; position: absolute; left: 0; color: var(--gold); }
+    .honest { border-left-color: var(--green); }
+    .contact { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+    footer { border-top: 1px solid var(--border); }
+    .footer-inner { max-width: 1000px; margin: 0 auto; padding: 1.5rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; font-size: 0.8125rem; color: var(--muted); }
+    .footer-inner a { color: var(--muted); }
+    @media (max-width: 640px) { h1 { font-size: 1.75rem; } .chapters { font-size: 0.875rem; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="https://edgentllc.com" aria-label="Edgent LLC home">edgent<span>llc</span></a>
+    <div class="nav-links"><a href="https://edgentllc.com">edgentllc.com</a></div>
+  </div>
+</nav>
+
+<main>
+  <div class="section-label">Recorded walkthrough</div>
+  <h1>VForce360: a governed lakehouse with a natural language analyst</h1>
+  <p class="lede">A single continuous walkthrough of VForce360, the governed data lakehouse Edgent LLC builds and operates. It was recorded on the open demonstration tenant with no sign-in, so every screen in it can be reproduced by anyone who opens the same link and types the same thing. The data is synthetic.</p>
+
+  <div class="player">
+    <video controls preload="metadata" poster="assets/vforce-walkthrough-poster.jpg" width="1920" height="1080">
+      <source src="assets/vforce-walkthrough.mp4" type="video/mp4">
+      <track kind="captions" src="assets/vforce-walkthrough.vtt" srclang="en" label="English" default>
+      Your browser does not support the video element. The walkthrough can be downloaded with the link below.
+    </video>
+  </div>
+  <div class="playerbar">
+    <span>Captions on by default. Use the player caption control to turn them off.</span>
+    <a class="dl" href="assets/vforce-walkthrough.mp4" download>Download the video (MP4)</a>
+    <a class="dl" href="assets/vforce-walkthrough.vtt" download>Download captions (WebVTT)</a>
+    <a class="dl" href="assets/vforce-walkthrough.srt" download>Download captions (SRT)</a>
+  </div>
+
+  <h2>What the walkthrough shows</h2>
+  <p>The sequence follows the platform the way an evaluator would work through it: find the data, ask it a question, check that the answer is traceable, then confirm that the parts a buyer has to defend, authorization, human review and provenance, are real controls rather than claims.</p>
+
+  <table class="chapters">
+    <thead>
+      <tr><th>Chapter</th><th>What it covers</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>The open tenant</td><td><strong>No sign-in.</strong> The platform treats the visitor as an anonymous subject with read grants over the demonstration data products, and every screen is what that subject is permitted to see.</td></tr>
+      <tr><td>The catalog</td><td><strong>One tenant, four catalogs.</strong> 29 curated gold tables, 21 conformed silver tables behind them, and a catalog of pages produced by the document pipeline. Medallion layers and the audit catalog are first class objects, not folders.</td></tr>
+      <tr><td>A table, in full</td><td><strong>Columns, sample rows, quality rules and lineage.</strong> The lineage graph is derived, not drawn: every edge resolves to the run or transform that produced it.</td></tr>
+      <tr><td>Ask the data a question</td><td><strong>Plain language to governed SQL.</strong> The answer arrives as rows, and the SQL that produced them is shown. Nothing has to be taken on trust.</td></tr>
+      <tr><td>The follow up remembers</td><td><strong>Multi-round context.</strong> A follow-up that names no table resolves to the table from the previous turn, answers, and renders a chart because the result is a ranking.</td></tr>
+      <tr><td>Take the SQL and change it</td><td><strong>The conversation is not a dead end.</strong> The generated statement opens in the SQL editor, is edited, and is re-run through the same authorization path and the same warehouse.</td></tr>
+      <tr><td>Governance</td><td><strong>Authorization is enforced by the platform, not by the model.</strong> The compliance ledger refuses an unidentified caller before identity is even a question. Relationship-based access control declines at four different doors with one decision.</td></tr>
+      <tr><td>Document intelligence</td><td><strong>285 scanned pages across 18 batches</strong>, each read, classified, summarized and scored, with the confidence score deciding what a person has to look at.</td></tr>
+      <tr><td>The human review gate</td><td><strong>Eighty pages queued for a human</strong>, each with the reason it landed there. Nothing crosses from machine output to trusted record without that step.</td></tr>
+      <tr><td>The document becomes a table</td><td><strong>The scan, as data.</strong> 22 columns carrying extracted text, summary, document type, confidence, review disposition and a sha256 of the source page, so a citation can be checked.</td></tr>
+      <tr><td>Orchestration</td><td><strong>Ten flows, a live engine.</strong> One pipeline is opened to show its real conditional branch and its run history: three consecutive nightly runs, all successful.</td></tr>
+      <tr><td>Quality and dashboards</td><td><strong>Twenty validation rules evaluated against live rows</strong>, and results pinned to a dashboard built on the same governed tables the analyst queries.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Try the same thing yourself</h2>
+  <p>The tenant in the video is open. Nothing in the walkthrough requires an account, a trial, or a conversation with a salesperson.</p>
+  <div class="gov honest">
+    <ul>
+      <li><strong>The demonstration tenant:</strong> <a href="https://acme.vforce360.ai">acme.vforce360.ai</a>. Start at the catalog, then use Ask Mnemo.</li>
+      <li><strong>The platform front door:</strong> <a href="https://vforce360.ai">vforce360.ai</a>.</li>
+      <li><strong>How Claude is used and governed across Edgent products:</strong> <a href="claude-case-study.html">the case study</a>.</li>
+      <li><strong>Company:</strong> <a href="https://edgentllc.com">edgentllc.com</a>. Capability statement: <a href="https://edgentllc.com/capability-statement.pdf">capability-statement.pdf</a>.</li>
+    </ul>
+  </div>
+
+  <h2>What this recording is, and is not</h2>
+  <div class="gov">
+    <ul>
+      <li><strong>Edgent built and operates this.</strong> VForce360 is Edgent's own product, running on Edgent's own infrastructure. It is not a reseller demonstration and it is not a mockup.</li>
+      <li><strong>The data is synthetic.</strong> The district figures, the student records and the scanned pages are generated or public-domain material used for demonstration. No real student, patient or claimant data appears anywhere in the recording or on the tenant.</li>
+      <li><strong>Nothing was staged.</strong> The walkthrough was captured by driving a real browser against the live tenant. Page loads were trimmed at the head of each shot so the video is not padded with spinners; no result, latency or screen was altered, and nothing was sped up.</li>
+      <li><strong>Some things are deliberately absent.</strong> Screens that an anonymous session cannot reach, such as connector configuration and the itemized audit ledger, are not shown, because showing them would have meant signing in and the point of this recording is that you can reproduce it without an account.</li>
+      <li><strong>Accessibility.</strong> The walkthrough is captioned in WebVTT, captions are on by default, and both WebVTT and SRT are downloadable above. A version with open captions burned into the picture is available on request for players that ignore caption tracks.</li>
+    </ul>
+  </div>
+
+  <div class="contact">
+    <h3>Contact</h3>
+    <p>Eric G. Diana, Managing Member and Principal Architect. <a href="mailto:eric.diana@edgentllc.com">eric.diana@edgentllc.com</a>, 480-414-5556. Capability statement: <a href="https://edgentllc.com/capability-statement.pdf">edgentllc.com/capability-statement.pdf</a>. SBA certification profile: <a href="https://search.certifications.sba.gov/profile/UZFLEDGS3PC5/1ZSR0">UEI UZFLEDGS3PC5, CAGE 1ZSR0</a>.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>&copy; 2026 Edgent LLC &middot; SDVOSB &middot; Bastrop, TX</div>
+    <div><a href="https://edgentllc.com">edgentllc.com</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
