@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teach With Us | Edgent LLC</title>
+  <meta name="description" content="Edgent hires current teachers for paid, project-based instructional work: curriculum writing, course review, e-learning development, and train-the-trainer delivery, mostly remote and built around a school schedule.">
+  <meta name="keywords" content="teacher side work, instructional design, curriculum development, train the trainer, e-learning, course reviewer, SCORM, education jobs, teacher consultant, professional learning, instructor">
+  <link rel="icon" href="/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #1e1e27; --surface: #12121a; --surface-2: #1a1a24; --border: #2a2a38;
+      --text: #e4e4ef; --muted: #8888a0; --muted-strong: #a8a8c0;
+      --accent: #3b82f6; --accent-soft: rgba(59,130,246,0.12);
+      --gold: #d4a843; --gold-soft: rgba(212,168,67,0.12);
+      --green: #4ade80; --green-soft: rgba(74,222,128,0.12);
+    }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; backdrop-filter: blur(12px); background: rgba(30,30,39,0.85); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0.875rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+    .logo { font-size: 1.125rem; font-weight: 700; color: var(--text); }
+    .logo span { color: var(--accent); }
+    .nav-links a { color: var(--muted); font-size: 0.875rem; margin-left: 1.5rem; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .nav-links a.current { color: var(--text); }
+    main { max-width: 1100px; margin: 0 auto; padding: 7rem 1.5rem 4rem; }
+    .section-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+    .lede { font-size: 1.0625rem; color: var(--muted-strong); max-width: 66ch; }
+    h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+    h3 { font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.5rem; }
+    section { margin-top: 3.5rem; }
+    section > p { color: var(--muted-strong); max-width: 78ch; margin-bottom: 1rem; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 1.25rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
+    .card p, .card li { font-size: 0.875rem; color: var(--muted-strong); }
+    .card ul { list-style: none; margin-top: 0.5rem; }
+    .card li { padding-left: 1.1rem; position: relative; margin-bottom: 0.4rem; }
+    .card li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
+    .card.gold { border-top: 3px solid var(--gold); }
+    .card.blue { border-top: 3px solid var(--accent); }
+    .card.green { border-top: 3px solid var(--green); }
+    .facts { background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 10px; padding: 1.25rem 1.5rem; margin-top: 1.5rem; }
+    .facts p { font-size: 0.9375rem; color: var(--muted-strong); max-width: 78ch; }
+    .cta { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.75rem; }
+    .cta p { color: var(--muted-strong); max-width: 70ch; }
+    .cta .button { display: inline-block; margin-top: 1rem; background: var(--accent); color: #fff; font-weight: 600; font-size: 0.9375rem; padding: 0.65rem 1.4rem; border-radius: 8px; }
+    .cta .button:hover { text-decoration: none; filter: brightness(1.1); }
+    footer { border-top: 1px solid var(--border); }
+    .footer-inner { max-width: 1100px; margin: 0 auto; padding: 1.5rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; font-size: 0.8125rem; color: var(--muted); }
+    .footer-inner a { color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="/" aria-label="Edgent LLC home">edgent<span>llc</span></a>
+    <div class="nav-links">
+      <a href="/#services">Services</a>
+      <a href="/products.html">Products</a>
+      <a href="/process.html">Process</a>
+      <a class="current" href="/instructors.html">Teach With Us</a>
+      <a href="/#about">Company</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="section-label">Join Our Training Team</div>
+  <h1>Current teachers: teach with us</h1>
+  <p class="lede">Edgent builds training and curriculum for government agencies and school systems. We are building a bench of practicing teachers who work with us on a project basis as instructors, trainers, curriculum writers, and course reviewers. The work is paid per engagement and mostly remote. It can fit around a school schedule, and it can be more than that for educators who want larger roles.</p>
+
+  <section aria-labelledby="what-we-do">
+    <h2 id="what-we-do">What we do</h2>
+    <p>Edgent is a veteran-owned education and technology company in Bastrop, Texas. Our instructional design practice produces curriculum and e-learning for public-sector clients: course content authored to a client's own frameworks, accessible by design (Section 508), packaged as SCORM and xAPI for delivery in learning management systems, and measured so a client can see whether practice actually changed after the training. Classroom credibility is the part we do not manufacture. That is where you come in.</p>
+  </section>
+
+  <section aria-labelledby="the-work">
+    <h2 id="the-work">The work</h2>
+    <div class="cards">
+      <div class="card blue">
+        <h3>Curriculum writing and review</h3>
+        <ul>
+          <li>Draft lessons, scenarios, and assessments in your subject area</li>
+          <li>Review courses for accuracy, grade-level fit, and classroom realism</li>
+          <li>Fully remote, deadline-based, sized from a few hours to a few weeks</li>
+        </ul>
+      </div>
+      <div class="card gold">
+        <h3>Instruction and train-the-trainer</h3>
+        <ul>
+          <li>Deliver workshops and professional learning sessions, virtual or in person</li>
+          <li>Prepare client staff to carry a program forward themselves</li>
+          <li>Scheduling that works with a school calendar: evenings, weekends, breaks, in-service days, or larger blocks for those with more availability</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h3>Subject-matter expertise</h3>
+        <ul>
+          <li>Advise on how content lands with real students and real teachers</li>
+          <li>Pilot activities and give structured feedback</li>
+          <li>Shape products serving K-12 data, MTSS, and instructional programs</li>
+        </ul>
+      </div>
+    </div>
+    <div class="facts">
+      <p>Plain terms: engagements are paid, project-based, independent contractor work. Most people do this alongside a teaching position; educators who want larger or recurring roles can grow into them as our contracts grow. Typical rates: $35 to $60 per hour for curriculum writing and review, $50 to $95 per hour for instruction and train-the-trainer delivery, and day rates for multi-day workshops. The rate for each engagement is stated in writing before work starts. We match projects to your certification area and availability, and there is no minimum commitment. Openings vary with the contracts we win, so joining the bench is an expression of interest, not a job offer.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="path">
+    <h2 id="path">Where it can lead</h2>
+    <p>The typical path starts with pure remote work: a course review, a set of lessons, a scenario bank. Contributors who deliver well get first call on larger engagements, workshop delivery, and recurring roles, and as our contracts grow, remote project work can grow into a full-time position on the Edgent training staff. When we staff new contracts, this bench is where we look first.</p>
+  </section>
+
+  <section aria-labelledby="who">
+    <h2 id="who">Who we are looking for</h2>
+    <p>Practicing classroom teachers and instructional coaches with strong subject knowledge and clear writing. Experience with curriculum development, professional learning delivery, mentoring, or e-learning tools helps but is not required; we teach our tools and pay for the ramp time. All subject areas and grade bands are welcome, and veteran and military-spouse educators are especially encouraged to reach out.</p>
+  </section>
+
+  <div class="cta">
+    <h2>Interested?</h2>
+    <p>Send a short note with your subject area, grade band, state, and the kind of work that interests you. A resume is welcome but optional at this stage. We respond to every note.</p>
+    <a class="button" href="mailto:eric.diana@edgentllc.com?subject=Teach%20With%20Us">Email the team</a>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>© 2026 Edgent LLC · SDVOSB · Bastrop, TX</div>
+    <div>
+      <a href="/">Home</a> ·
+      <a href="/terms">Terms</a> ·
+      <a href="/privacy">Privacy</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
