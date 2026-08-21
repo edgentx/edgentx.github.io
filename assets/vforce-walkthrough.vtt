@@ -1,477 +1,523 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:06.706
-This is a walkthrough of VForce360, the governed
-data lakehouse Edgent builds and operates.
+00:00:00.500 --> 00:00:07.450 line:90%,start align:center position:50%
+This is a working walkthrough of VForce360, the governed data
+lakehouse Edgent builds and operates.
 
 2
-00:00:06.706 --> 00:00:12.417
-Everything you are about to see runs on an open
-demonstration tenant with no sign in, so you can
+00:00:07.970 --> 00:00:16.133 line:90%,start align:center position:50%
+Almost everything in it runs on open demonstration tenants that
+need no sign in, so you can reproduce it yourself by opening the
 
 3
-00:00:12.417 --> 00:00:18.129
-reproduce all of it yourself at acme dot vforce360
-dot ai.
+00:00:16.133 --> 00:00:18.620 line:90%,start align:center position:50%
+same address and typing the same thing.
 
 4
-00:00:18.129 --> 00:00:19.750
-The data is synthetic.
+00:00:19.140 --> 00:00:25.990 line:90%,start align:center position:50%
+All of the data is synthetic. No real student or employee records
+appear anywhere in this recording.
 
 5
-00:00:20.000 --> 00:00:22.890
-No sign in. No account.
+00:00:26.510 --> 00:00:31.110 line:90%,start align:center position:50%
+Start with the catalog, because everything else in the platform
+hangs off it.
 
 6
-00:00:22.890 --> 00:00:29.799
-The platform knows this session as an anonymous
-subject with read grants over the demonstration data
+00:00:31.630 --> 00:00:40.369 line:90%,start align:center position:50%
+One tenant here holds four catalogs. The gold layer carries 29
+curated tables, the silver layer carries the 21 conformed tables
 
 7
-00:00:29.799 --> 00:00:36.709
-products,
+00:00:40.369 --> 00:00:46.355 line:90%,start align:center position:50%
+behind them, and a separate catalog holds pages that came out of
+the document pipeline.
 
 8
-00:00:36.709 --> 00:00:44.750
-and every screen you see is what that subject is
-allowed to see.
+00:00:46.875 --> 00:00:52.025 line:90%,start align:center position:50%
+Raw, silver, gold and audit are first class objects with their own
+permissions.
 
 9
-00:00:45.000 --> 00:00:51.012
-The catalog is the map. One tenant, four catalogs.
+00:00:52.545 --> 00:00:59.145 line:90%,start align:center position:50%
+Open a single table and you get its whole record. This one reports
+chronic absenteeism by school.
 
 10
-00:00:51.012 --> 00:01:00.992
-Gold carries 29 curated tables, silver carries the
-21 conformed tables behind them,
+00:00:59.665 --> 00:01:07.315 line:90%,start align:center position:50%
+Seven columns, each with its type and its source, and a quality
+status per column that comes from the checks declared against it.
 
 11
-00:01:00.992 --> 00:01:09.048
-and cedms carries the pages that came out of the
-document pipeline.
+00:01:07.835 --> 00:01:16.297 line:90%,start align:center position:50%
+Note the last column, called suppressed. This table is built to
+withhold a rate when the group behind it is too small to report, as
 
 12
-00:01:09.048 --> 00:01:19.750
-Bronze, silver, gold and the audit catalog are all
-first class objects here, not folders.
+00:01:16.297 --> 00:01:18.235 line:90%,start align:center position:50%
+student privacy rules require.
 
 13
-00:01:20.000 --> 00:01:29.462
-Open one table and you get the whole record of it.
-The columns and their types. Real sample rows.
+00:01:18.755 --> 00:01:25.955 line:90%,start align:center position:50%
+The sample rows are real rows from the table, and the footer states
+plainly that they are masked according to policy.
 
 14
-00:01:29.462 --> 00:01:38.437
-And the quality tab, which on this table says
-plainly that no rules are declared against it.
+00:01:26.475 --> 00:01:32.850 line:90%,start align:center position:50%
+The lineage view answers the question an auditor actually asks,
+which is where this number came from.
 
 15
-00:01:38.437 --> 00:01:44.436
-That is the right answer to give. Absence of a rule
-is not a pass, and a platform that hid that would be
+00:01:33.370 --> 00:01:41.448 line:90%,start align:center position:50%
+Every edge resolves to the job that produced it. The platform
+derived it from the transformations it ran, so it cannot fall out
 
 16
-00:01:44.436 --> 00:01:50.435
-worse, not better.
+00:01:41.448 --> 00:01:44.120 line:90%,start align:center position:50%
+of date the way a documented diagram does.
 
 17
-00:01:50.435 --> 00:01:56.483
-Then the lineage, which is the part that matters for
-an audit.
+00:01:44.640 --> 00:01:51.865 line:90%,start align:center position:50%
+Quality is declared on the table itself, so it travels with the
+data rather than living in a separate testing tool.
 
 18
-00:01:56.483 --> 00:02:03.117
-Seven tables, seven edges, and every edge resolves
-to the run or the transform that produced it. Nobody
+00:01:52.385 --> 00:02:01.410 line:90%,start align:center position:50%
+This table carries four scored checks. School identifier must not
+be null. The chronic threshold has to fall between 5 and 20. The
 
 19
-00:02:03.117 --> 00:02:09.750
-typed this graph. It is derived.
+00:02:01.410 --> 00:02:08.560 line:90%,start align:center position:50%
+chronic count has to clear a minimum cell size, which is the
+suppression rule enforced as data quality.
 
 20
-00:02:10.000 --> 00:02:12.886
-Now the analyst.
+00:02:09.080 --> 00:02:17.173 line:90%,start align:center position:50%
+Three of the four are configured checks that declare a severity,
+and all three are set to fail rather than warn, so breaking one
 
 21
-00:02:12.886 --> 00:02:23.527
-This is a plain language question against a governed
-table,
+00:02:17.173 --> 00:02:19.955 line:90%,start align:center position:50%
+marks the table as not meeting its contract.
 
 22
-00:02:23.527 --> 00:02:34.169
-and the answer comes back as rows, not as prose
-about rows.
+00:02:20.475 --> 00:02:26.675 line:90%,start align:center position:50%
+The run history is on the same screen, with the result of every
+evaluation and when it happened.
 
 23
-00:02:34.169 --> 00:02:44.449
-Ten rows of monthly attendance: the school, the
-school year, the month, days possible, days present,
+00:02:27.195 --> 00:02:34.745 line:90%,start align:center position:50%
+Across the whole catalog there are 20 rules over 7 monitored
+tables, passing at 99.3 percent.
 
 24
-00:02:44.449 --> 00:02:54.730
-and the rate.
+00:02:35.265 --> 00:02:44.198 line:90%,start align:center position:50%
+The interesting line is the one that is not passing. A rule on the
+student grade column is at 85.9 percent and is flagged as a
 
 25
-00:02:54.730 --> 00:03:02.125
-And the SQL is shown. It is always shown.
+00:02:44.198 --> 00:02:44.765 line:90%,start align:center position:50%
+warning.
 
 26
-00:03:02.125 --> 00:03:14.750
-You never have to trust a number you cannot trace
-back to a statement.
+00:02:45.285 --> 00:02:52.235 line:90%,start align:center position:50%
+Now the analyst. This is a question in plain language, asking that
+same table for its school level counts.
 
 27
-00:03:15.000 --> 00:03:24.382
-The follow up names no table. It says what about the
-top ten.
+00:02:52.755 --> 00:02:59.155 line:90%,start align:center position:50%
+The answer comes back as rows rather than as a paragraph describing
+rows, and look at what came back.
 
 28
-00:03:24.382 --> 00:03:37.301
-The analyst carries the context forward, resolves it
-to the same table, and answers.
+00:02:59.675 --> 00:03:08.150 line:90%,start align:center position:50%
+Nine of the ten rows are blank, and each one is marked suppressed.
+Only the district total, covering 65 students, was released.
 
 29
-00:03:37.301 --> 00:03:49.605
-It also picked a chart on its own, because the shape
-of the result is a ranking.
+00:03:08.670 --> 00:03:17.011 line:90%,start align:center position:50%
+The individual schools were withheld because the group behind each
+one is too small to report without identifying somebody. That is
 
 30
-00:03:49.605 --> 00:03:55.142
-And here is the SQL it actually ran.
+00:03:17.011 --> 00:03:22.295 line:90%,start align:center position:50%
+the minimum cell size rule from the previous screen, doing its job
+on a live query.
 
 31
-00:03:55.142 --> 00:04:03.909
-Select school id, school year, attendance rate, from
-acme gold attendance by month, ordered descending,
+00:03:22.815 --> 00:03:31.102 line:90%,start align:center position:50%
+The SQL is shown, and it is always shown. You are never asked to
+trust a number you cannot trace back to the statement that produced
 
 32
-00:04:03.909 --> 00:04:12.675
-limit ten.
+00:03:31.102 --> 00:03:31.290 line:90%,start align:center position:50%
+it.
 
 33
-00:04:12.675 --> 00:04:19.750
-That is a statement a data steward can review.
+00:03:31.810 --> 00:03:39.196 line:90%,start align:center position:50%
+The obvious question is whether the masking is just something the
+analyst chose to do, and whether writing the query yourself would
 
 34
-00:04:20.000 --> 00:04:27.660
-The conversation is not a dead end.
+00:03:39.196 --> 00:03:39.985 line:90%,start align:center position:50%
+get around it.
 
 35
-00:04:27.660 --> 00:04:45.607
-Open in SQL Editor hands you the exact statement,
-and from there it is your query.
+00:03:40.505 --> 00:03:49.669 line:90%,start align:center position:50%
+Open in SQL Editor hands over the exact statement. From that point
+it is an ordinary query, and this one has been rewritten by hand to
 
 36
-00:04:45.607 --> 00:04:52.392
-Change the limit, run it again.
+00:03:49.669 --> 00:03:52.405 line:90%,start align:center position:50%
+ask for the suppressed columns directly.
 
 37
-00:04:52.392 --> 00:05:06.399
-Same anonymous session, same authorization path,
-same warehouse.
+00:03:52.925 --> 00:04:01.355 line:90%,start align:center position:50%
+Same ten rows. Same nine blanks. The suppression is enforced on the
+read path, so it applies to the analyst, to the editor, and to
 
 38
-00:05:06.399 --> 00:05:19.750
-The analyst is a way into the platform, not a wall
-around it.
+00:04:01.355 --> 00:04:03.625 line:90%,start align:center position:50%
+anything else that reads the table.
 
 39
-00:05:24.000 --> 00:05:33.649
-This is the compliance ledger, and this is what it
-tells an anonymous caller.
+00:04:04.145 --> 00:04:10.520 line:90%,start align:center position:50%
+That is the difference between a policy a platform documents and a
+policy a platform enforces.
 
 40
-00:05:33.649 --> 00:05:42.171
-Quote: this data is governed. The platform refused
-the request before identity was even a question, so
+00:04:11.040 --> 00:04:17.215 line:90%,start align:center position:50%
+The part of a data platform that matters most to a public
+institution is the part that says no.
 
 41
-00:05:42.171 --> 00:05:50.692
-nothing was sent to this browser.
+00:04:17.735 --> 00:04:24.685 line:90%,start align:center position:50%
+This is the permissions tab of a governed table, viewed by the
+anonymous session we have been using all along.
 
 42
-00:05:50.692 --> 00:06:00.717
-That is the control working, and it is worth being
-precise about where it lives.
+00:04:25.205 --> 00:04:33.350 line:90%,start align:center position:50%
+It does not show an empty list, and it does not show an error. It
+states the rule that was not satisfied. You need admin on this
 
 43
-00:06:00.717 --> 00:06:09.615
-The refusal did not come from the model. The model
-was never consulted.
+00:04:33.350 --> 00:04:35.005 line:90%,start align:center position:50%
+object to view its grants.
 
 44
-00:06:09.615 --> 00:06:13.750
-The platform refused at the door.
+00:04:35.525 --> 00:04:44.264 line:90%,start align:center position:50%
+The connector configuration answers the same way. A refusal that
+names the missing relation is something an administrator can act
 
 45
-00:06:14.000 --> 00:06:27.688
-Access is relationship based, enforced by OpenFGA,
-and it is the same decision engine everywhere.
+00:04:44.264 --> 00:04:46.025 line:90%,start align:center position:50%
+on. A blank screen is not.
 
 46
-00:06:27.688 --> 00:06:37.424
-Ask the permissions screen for grants you do not own
-and it declines.
+00:04:46.545 --> 00:04:55.153 line:90%,start align:center position:50%
+Here is the identical table and the identical tab, on the address
+that requires a sign in, as a service account belonging to this
 
 47
-00:06:37.424 --> 00:06:44.762
-Ask for the connector configuration and it declines.
+00:04:55.153 --> 00:04:55.620 line:90%,start align:center position:50%
+tenant.
 
 48
-00:06:44.762 --> 00:06:54.286
-Ask the analyst for a table the session cannot
-authorize, and the SQL gate declines before the
+00:04:56.140 --> 00:05:04.053 line:90%,start align:center position:50%
+Now the grants are listed. Who holds them, whether they are a user
+or a group, what level each one has, and whether the platform has
 
 49
-00:06:54.286 --> 00:07:03.811
-query runs, with the reason written out.
+00:05:04.053 --> 00:05:06.990 line:90%,start align:center position:50%
+re-checked them against the live decision engine.
 
 50
-00:07:03.811 --> 00:07:08.750
-Four different doors, one decision.
+00:05:07.510 --> 00:05:12.560 line:90%,start align:center position:50%
+Nothing about the table changed. The only thing that changed is who
+is asking.
 
 51
-00:07:09.000 --> 00:07:13.607
-Governance is not only table level.
+00:05:13.080 --> 00:05:21.005 line:90%,start align:center position:50%
+You do not have to take that on faith. The platform answers a
+permission question directly, for any subject and any object.
 
 52
-00:07:13.607 --> 00:07:21.242
-Policies and column semantics attach to the object
-itself,
+00:05:21.525 --> 00:05:27.875 line:90%,start align:center position:50%
+Asked on behalf of everyone, the shared table is allowed and the
+two restricted tables are denied.
 
 53
-00:07:21.242 --> 00:07:29.996
-so a masking or classification decision travels with
-the column into every query, every notebook, and
+00:05:28.395 --> 00:05:36.633 line:90%,start align:center position:50%
+Asked on behalf of the service account, all three are allowed, and
+each answer carries the reason. Granted viewer directly on this
 
 54
-00:07:29.996 --> 00:07:38.750
-every answer the analyst gives.
+00:05:36.633 --> 00:05:39.295 line:90%,start align:center position:50%
+table. Granted owner directly on that one.
 
 55
-00:07:43.000 --> 00:07:47.882
-285 scanned pages across 18 batches.
+00:05:39.815 --> 00:05:48.237 line:90%,start align:center position:50%
+Same engine, same objects, two subjects, opposite verdicts, with
+the grant that produced each verdict written out. That is what
 
 56
-00:07:47.882 --> 00:07:56.018
-Every page has been read, classified, summarized and
-scored.
+00:05:48.237 --> 00:05:52.415 line:90%,start align:center position:50%
+makes an access decision auditable rather than merely enforced.
 
 57
-00:07:56.018 --> 00:08:00.222
-Look at the disposition column.
+00:05:52.935 --> 00:06:01.239 line:90%,start align:center position:50%
+Every one of those decisions is recorded. This is the compliance
+ledger, and the subject column contains both the anonymous session
 
 58
-00:08:00.222 --> 00:08:08.494
-The platform did not classify everything and declare
-victory.
+00:06:01.239 --> 00:06:02.760 line:90%,start align:center position:50%
+and the service account.
 
 59
-00:08:08.494 --> 00:08:18.122
-It sorted its own output into what it is confident
-about and what a person has to look at, and the
+00:06:03.280 --> 00:06:11.600 line:90%,start align:center position:50%
+The verdict column contains the allowances and the refusals side by
+side, including the refusals from a few moments ago in this
 
 60
-00:08:18.122 --> 00:08:27.750
-confidence score is the thing that decides.
+00:06:11.600 --> 00:06:12.255 line:90%,start align:center position:50%
+recording.
 
 61
-00:08:28.000 --> 00:08:30.355
-This is the gate.
+00:06:12.775 --> 00:06:19.500 line:90%,start align:center position:50%
+The entries are hash chained, so a record cannot be quietly edited
+after the fact without breaking the chain.
 
 62
-00:08:30.355 --> 00:08:38.668
-Eighty pages are sitting in a human review queue
-right now, each one with the reason it landed there
+00:06:20.020 --> 00:06:26.395 line:90%,start align:center position:50%
+Institutions run on paper as much as on tables, so the same
+governance has to reach the documents.
 
 63
-00:08:38.668 --> 00:08:46.981
-written next to it.
+00:06:26.915 --> 00:06:35.440 line:90%,start align:center position:50%
+285 scanned pages across 18 batches, each one read, classified,
+summarized and scored for confidence.
 
 64
-00:08:46.981 --> 00:08:54.185
-Segmentation fallback. Low confidence transcription.
+00:06:35.960 --> 00:06:44.111 line:90%,start align:center position:50%
+Look at the disposition column. The platform did not classify
+everything and declare success. It sorted its own output into what
 
 65
-00:08:54.185 --> 00:09:02.775
-A person accepts or reprocesses, and the decision is
-recorded.
+00:06:44.111 --> 00:06:50.160 line:90%,start align:center position:50%
+it is confident about and what a person has to check, and the
+confidence score is what decides.
 
 66
-00:09:02.775 --> 00:09:12.750
-Nothing crosses from machine output to trusted
-record without that step.
+00:06:50.680 --> 00:06:57.355 line:90%,start align:center position:50%
+80 pages are sitting in a review queue right now, each with the
+reason it landed there recorded next to it.
 
 67
-00:09:13.000 --> 00:09:16.700
-And here is where it lands.
+00:06:57.875 --> 00:07:06.401 line:90%,start align:center position:50%
+A person accepts or reprocesses, and that decision is written to
+the audit trail. Nothing crosses from machine output to trusted
 
 68
-00:09:16.700 --> 00:09:23.827
-The same pages, as a queryable table in the catalog.
+00:07:06.401 --> 00:07:07.600 line:90%,start align:center position:50%
+record without it.
 
 69
-00:09:23.827 --> 00:09:34.723
-22 columns carrying the extracted text, the summary,
-the document type, the confidence, the review
+00:07:08.120 --> 00:07:13.270 line:90%,start align:center position:50%
+Data does not arrive on its own, so the last piece is the pipeline
+that moves it.
 
 70
-00:09:34.723 --> 00:09:45.618
-disposition and its reason, and a sha256 of the
-source page.
+00:07:13.790 --> 00:07:22.390 line:90%,start align:center position:50%
+This is the pipeline builder on the same tenant, signed in, because
+authoring is a write and the public view is deliberately read only.
 
 71
-00:09:45.618 --> 00:09:52.882
-The scan is now data you can join to, query and
-cite.
+00:07:22.910 --> 00:07:29.810 line:90%,start align:center position:50%
+The panel on the left is the step library. Control flow, code and
+models, connectors, and data steps.
 
 72
-00:09:52.882 --> 00:10:02.750
-The hash is how you prove the row still refers to
-the page it came from.
+00:07:30.330 --> 00:07:39.310 line:90%,start align:center position:50%
+Four steps for a nightly student information system load. Pull the
+extract. Normalize the rows. A quality gate. Publish the result to
 
 73
-00:10:03.000 --> 00:10:10.697
-Which means you can ask about the paper the same way
-you ask about the numbers.
+00:07:39.310 --> 00:07:40.255 line:90%,start align:center position:50%
+the lakehouse.
 
 74
-00:10:10.697 --> 00:10:15.860
-How many pages are still waiting on a person.
-Eighty.
+00:07:40.775 --> 00:07:49.009 line:90%,start align:center position:50%
+Each step is dropped onto the canvas and then wired to the next
+one, so the order of operations is an explicit graph rather than
 
 75
-00:10:15.860 --> 00:10:24.239
-That is the same eighty you just saw in the review
-queue, and it is not a coincidence.
+00:07:49.009 --> 00:07:50.875 line:90%,start align:center position:50%
+something buried in a script.
 
 76
-00:10:24.239 --> 00:10:32.131
-The queue and the analyst are reading the same
-table, so they cannot drift apart.
+00:07:51.395 --> 00:08:00.258 line:90%,start align:center position:50%
+The quality gate is a real condition rather than a label. It reads
+the rejected row count from the step before it and continues only
 
 77
-00:10:32.131 --> 00:10:37.440
-Same analyst, same governed path, same SQL shown.
-There is no separate document product to buy and
+00:08:00.258 --> 00:08:01.870 line:90%,start align:center position:50%
+when that count is zero.
 
 78
-00:10:37.440 --> 00:10:42.750
-integrate.
+00:08:02.390 --> 00:08:10.290 line:90%,start align:center position:50%
+Name the flow, and save it. It becomes draft version one on this
+tenant, and the audit trail records who created it and when.
 
 79
-00:10:47.000 --> 00:10:53.317
-Ten flows on this tenant, and the engine behind them
-is live.
+00:08:10.810 --> 00:08:16.410 line:90%,start align:center position:50%
+A pipeline here is an object in the platform with a version, an
+owner, and a history.
 
 80
-00:10:53.317 --> 00:10:59.945
-Records intake, FOIA request intake, 311 service
-request routing, grant application triage, a nightly
+00:08:16.930 --> 00:08:24.964 line:90%,start align:center position:50%
+Here is what one looks like after it has been running for a while.
+This is not a picture of a pipeline, it is the pipeline, read live
 
 81
-00:10:59.945 --> 00:11:06.572
-rollup, a retention sweep.
+00:08:24.964 --> 00:08:25.930 line:90%,start align:center position:50%
+from the engine.
 
 82
-00:11:06.572 --> 00:11:11.750
-Triggers are schedules, HTTP endpoints, or manual.
+00:08:26.450 --> 00:08:34.141 line:90%,start align:center position:50%
+Collect the counters for the day, summarize them, then a real
+branch. If the backlog is healthy, publish to the morning
 
 83
-00:11:12.000 --> 00:11:16.785
-Open one and the graph is not a picture of a
-pipeline. It is the pipeline, read live from the
+00:08:34.141 --> 00:08:37.825 line:90%,start align:center position:50%
+dashboard. If it is not, escalate to the duty supervisor.
 
 84
-00:11:16.785 --> 00:11:21.571
-engine.
+00:08:38.345 --> 00:08:45.745 line:90%,start align:center position:50%
+The run history sits behind the graph, so the question of whether
+last night worked is one click, not a support ticket.
 
 85
-00:11:21.571 --> 00:11:27.541
-Collect the day's counters, summarize them, then a
-real branch.
+00:08:46.265 --> 00:08:54.651 line:90%,start align:center position:50%
+Everything so far has been the inside of the platform. This is what
+it looks like when the output is published to a community that did
 
 86
-00:11:27.541 --> 00:11:32.611
-If the backlog is healthy, publish to the morning
-dashboard. If it is not, escalate to the duty
+00:08:54.651 --> 00:08:56.090 line:90%,start align:center position:50%
+not ask for a database.
 
 87
-00:11:32.611 --> 00:11:37.680
-supervisor.
+00:08:56.610 --> 00:09:02.485 line:90%,start align:center position:50%
+This is a school district transparency dashboard, open to the
+public, with no sign in.
 
 88
-00:11:37.680 --> 00:11:46.114
-And here is the run history. Three nights, three
-successes, two in the morning each time.
+00:09:03.005 --> 00:09:11.334 line:90%,start align:center position:50%
+Daily attendance is plotted against a labeled axis, and the
+district is compared year over year, so a parent can see the trend
 
 89
-00:11:46.114 --> 00:11:53.932
-This is the integration surface: a flow reaches a
-source through a connector, lands it in bronze, and
+00:09:11.334 --> 00:09:13.780 line:90%,start align:center position:50%
+rather than a single headline number.
 
 90
-00:11:53.932 --> 00:12:01.750
-the catalog picks the new fields up without a schema
-migration.
+00:09:14.300 --> 00:09:24.291 line:90%,start align:center position:50%
+Underneath, every school is ranked with its rate printed next to
+it. The top school this year sits at 94.7 percent and the bottom at
 
 91
-00:12:02.000 --> 00:12:08.444
-Twenty validation rules across the catalog, 99.3
-percent passing, with the timestamp of the last
+00:09:24.291 --> 00:09:25.275 line:90%,start align:center position:50%
+89.7 percent.
 
 92
-00:12:08.444 --> 00:12:14.888
-evaluation on the page.
+00:09:25.795 --> 00:09:32.870 line:90%,start align:center position:50%
+The order is not the same in both years, which is the kind of
+movement a published figure is supposed to make visible.
 
 93
-00:12:14.888 --> 00:12:22.299
-Data quality is not a report somebody writes at the
-end of a quarter.
+00:09:33.390 --> 00:09:37.590 line:90%,start align:center position:50%
+Change one filter and the whole page narrows to a single school.
 
 94
-00:12:22.299 --> 00:12:31.750
-It is a check that runs against live rows and is
-visible to anyone who opens the tenant.
+00:09:38.110 --> 00:09:47.344 line:90%,start align:center position:50%
+Enrollment falls to 195 and the chart rescales its axis instead of
+flattening. Proficiency and readiness come back as four separate
 
 95
-00:12:32.000 --> 00:12:36.489
-And the results pin to a dashboard.
+00:09:47.344 --> 00:09:51.010 line:90%,start align:center position:50%
+measures, each with its value printed above the bar.
 
 96
-00:12:36.489 --> 00:12:44.119
-Built on the same governed tables the analyst
-queries, so the dashboard and the answer cannot
+00:09:51.530 --> 00:10:00.630 line:90%,start align:center position:50%
+Behavior is reported per 100 students, and this school runs at 20.3
+incidents against a district figure of 38.8.
 
 97
-00:12:44.119 --> 00:12:51.750
-disagree with each other.
+00:10:01.150 --> 00:10:07.075 line:90%,start align:center position:50%
+The grade filter also repopulates, offering only the grades this
+school actually serves.
 
 98
-00:12:52.000 --> 00:12:58.420
-VForce360 is built and operated by Edgent LLC, a
-service disabled veteran owned small business in
+00:10:07.595 --> 00:10:12.995 line:90%,start align:center position:50%
+Now look at the climate and engagement survey for that same school.
+Every row is masked.
 
 99
-00:12:58.420 --> 00:13:04.841
-Bastrop, Texas.
+00:10:13.515 --> 00:10:21.353 line:90%,start align:center position:50%
+The mark is a shield reading less than or equal to ten, and the
+platform is careful about what it means. Withheld to protect
 
 100
-00:13:04.841 --> 00:13:10.807
-Everything in this walkthrough is running on
-synthetic data on an open tenant, and the link is on
+00:10:21.353 --> 00:10:26.915 line:90%,start align:center position:50%
+student privacy, because the group is smaller than the minimum
+reporting size. Not zero.
 
 101
-00:13:10.807 --> 00:13:16.773
-screen.
+00:10:27.435 --> 00:10:33.510 line:90%,start align:center position:50%
+The distinction between withheld and zero is preserved so the
+published figure is never false.
 
 102
-00:13:16.773 --> 00:13:23.705
-Nothing was staged for the recording and nothing was
-sped up.
+00:10:34.030 --> 00:10:44.614 line:90%,start align:center position:50%
+District wide, the tiered support summary is fully reportable. 78.3
+percent of students in tier one, 16.9 percent in tier two, 4.9
 
 103
-00:13:23.705 --> 00:13:30.750
-Eric Diana. eric dot diana at edgentllc dot com. 480
-414 5556.
+00:10:44.614 --> 00:10:46.405 line:90%,start align:center position:50%
+percent in tier three.
+
+104
+00:10:46.925 --> 00:10:54.625 line:90%,start align:center position:50%
+Break it down by school and most of it disappears, because most
+schools have too few students in a tier to report safely.
+
+105
+00:10:55.145 --> 00:11:03.975 line:90%,start align:center position:50%
+The platform does not leave that as a gap. It names exactly what it
+withheld: which 15 of the 18 schools, which grades, and how many of
+
+106
+00:11:03.975 --> 00:11:05.545 line:90%,start align:center position:50%
+the effectiveness rates.
+
+107
+00:11:06.065 --> 00:11:14.361 line:90%,start align:center position:50%
+An evaluator can therefore tell the difference between data that is
+missing and data that is protected, which is the whole argument for
+
+108
+00:11:14.361 --> 00:11:15.590 line:90%,start align:center position:50%
+publishing this way.
+
+109
+00:11:16.110 --> 00:11:25.735 line:90%,start align:center position:50%
+VForce360 is built and operated by Edgent LLC, a service disabled
+veteran owned small business in Bastrop, Texas.
+
+110
+00:11:26.255 --> 00:11:29.130 line:90%,start align:center position:50%
+The demonstration addresses are on screen.
+
+111
+00:11:29.650 --> 00:11:38.725 line:90%,start align:center position:50%
+Eric Diana. eric.diana@edgentllc.com. 480 414 5556.

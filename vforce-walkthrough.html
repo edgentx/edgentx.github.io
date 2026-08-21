@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VForce360 Walkthrough | Edgent LLC</title>
-  <meta name="description" content="A recorded walkthrough of VForce360, the governed data lakehouse Edgent LLC builds and operates: catalog and lineage, a natural-language analyst that shows its SQL, platform-enforced authorization, document intelligence behind a human review gate, and orchestration. Recorded on the open demonstration tenant with no sign-in. Narrated and captioned.">
+  <meta name="description" content="A recorded walkthrough of VForce360, the governed data lakehouse Edgent LLC builds and operates: catalog, lineage and declared quality rules on one table; a natural-language analyst that shows its SQL; small-population suppression enforced on the read path; platform-enforced authorization shown denied and granted for two subjects; document intelligence behind a human review gate; a pipeline built on screen; and a public school district transparency site published from the same platform. Narrated and captioned.">
   <link rel="icon" href="https://edgentllc.com/favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -68,17 +68,17 @@
 <main>
   <div class="section-label">Recorded walkthrough</div>
   <h1>VForce360: a governed lakehouse with a natural language analyst</h1>
-  <p class="lede">A single continuous walkthrough of VForce360, the governed data lakehouse Edgent LLC builds and operates. It was recorded on the open demonstration tenant with no sign-in, so every screen in it can be reproduced by anyone who opens the same link and types the same thing. The data is synthetic.</p>
+  <p class="lede">A single continuous walkthrough of VForce360, the governed data lakehouse Edgent LLC builds and operates. Most of it was recorded on open demonstration tenants with no sign-in, so those screens can be reproduced by anyone who opens the same link and types the same thing. Two segments are recorded signed in, and the narration says so at the point it happens. The data is synthetic.</p>
 
   <div class="player">
-    <video controls preload="metadata" poster="assets/vforce-walkthrough-poster.jpg" width="1920" height="1080">
+    <video controls preload="metadata" poster="assets/vforce-walkthrough-poster.jpg" width="1920" height="1200">
       <source src="assets/vforce-walkthrough.mp4" type="video/mp4">
-      <track kind="captions" src="assets/vforce-walkthrough.vtt" srclang="en" label="English" default>
+      <track kind="captions" src="assets/vforce-walkthrough.vtt" srclang="en" label="English">
       Your browser does not support the video element. The walkthrough can be downloaded with the link below.
     </video>
   </div>
   <div class="playerbar">
-    <span>Narrated, with captions on by default. Use the player caption control to turn them off.</span>
+    <span>Narrated and captioned. Captions are burned into a band below the picture, so they never cover the screen being discussed, and a WebVTT text track is available in the player caption control.</span>
     <a class="dl" href="assets/vforce-walkthrough.mp4" download>Download the video (MP4)</a>
     <a class="dl" href="assets/vforce-walkthrough.vtt" download>Download captions (WebVTT)</a>
     <a class="dl" href="assets/vforce-walkthrough.srt" download>Download captions (SRT)</a>
@@ -92,26 +92,26 @@
       <tr><th>Chapter</th><th>What it covers</th></tr>
     </thead>
     <tbody>
-      <tr><td>The open tenant</td><td><strong>No sign-in.</strong> The platform treats the visitor as an anonymous subject with read grants over the demonstration data products, and every screen is what that subject is permitted to see.</td></tr>
       <tr><td>The catalog</td><td><strong>One tenant, four catalogs.</strong> 29 curated gold tables, 21 conformed silver tables behind them, and a catalog of pages produced by the document pipeline. Medallion layers and the audit catalog are first class objects, not folders.</td></tr>
-      <tr><td>A table, in full</td><td><strong>Columns, sample rows, quality rules and lineage.</strong> The lineage graph is derived, not drawn: every edge resolves to the run or transform that produced it.</td></tr>
-      <tr><td>Ask the data a question</td><td><strong>Plain language to governed SQL.</strong> The answer arrives as rows, and the SQL that produced them is shown. Nothing has to be taken on trust.</td></tr>
-      <tr><td>The follow up remembers</td><td><strong>Multi-round context.</strong> A follow-up that names no table resolves to the table from the previous turn, answers, and renders a chart because the result is a ranking.</td></tr>
-      <tr><td>Take the SQL and change it</td><td><strong>The conversation is not a dead end.</strong> The generated statement opens in the SQL editor, is edited, and is re-run through the same authorization path and the same warehouse.</td></tr>
-      <tr><td>Governance</td><td><strong>Authorization is enforced by the platform, not by the model.</strong> The compliance ledger refuses an unidentified caller before identity is even a question. Relationship-based access control declines at four different doors with one decision.</td></tr>
-      <tr><td>Document intelligence</td><td><strong>285 scanned pages across 18 batches</strong>, each read, classified, summarized and scored, with the confidence score deciding what a person has to look at.</td></tr>
-      <tr><td>The human review gate</td><td><strong>Eighty pages queued for a human</strong>, each with the reason it landed there. Nothing crosses from machine output to trusted record without that step.</td></tr>
-      <tr><td>The document becomes a table</td><td><strong>The scan, as data.</strong> 22 columns carrying extracted text, summary, document type, confidence, review disposition and a sha256 of the source page, so a citation can be checked.</td></tr>
-      <tr><td>Orchestration</td><td><strong>Ten flows, a live engine.</strong> One pipeline is opened to show its real conditional branch and its run history: three consecutive nightly runs, all successful.</td></tr>
-      <tr><td>Quality and dashboards</td><td><strong>Twenty validation rules evaluated against live rows</strong>, and results pinned to a dashboard built on the same governed tables the analyst queries.</td></tr>
+      <tr><td>One table, in full</td><td><strong>Columns, types, per-column quality status and real sample rows</strong> on a chronic-absenteeism table, including the <code>suppressed</code> flag that decides whether a rate may be published at all.</td></tr>
+      <tr><td>Where the table came from</td><td><strong>Lineage is derived, not drawn.</strong> Seven tables and seven edges, each resolving to the run, transform or audit record that produced it.</td></tr>
+      <tr><td>Quality rules on that table</td><td><strong>Four scored checks declared on the table itself</strong>, including a minimum cell size rule, each with a severity and a run history. Across the catalog, 20 rules over 7 tables at 99.3 percent, and the one rule sitting at 85.9 percent is shown rather than hidden.</td></tr>
+      <tr><td>Ask the data a question</td><td><strong>Plain language to governed SQL.</strong> The answer arrives as rows and the SQL is shown. Nine of the ten rows come back masked, because the per-school groups are below the minimum reporting size; only the district total is released.</td></tr>
+      <tr><td>The rule is in the platform</td><td><strong>The same query, rewritten by hand in the SQL editor, returns the same masked cells.</strong> Suppression is enforced on the read path, not chosen by the analyst.</td></tr>
+      <tr><td>Access control</td><td><strong>The same object, two subjects.</strong> Anonymous is refused with the missing relation named. Signed in, the grants are listed. The decision engine is then asked directly and answers for both subjects, with the grant behind each verdict written out, and the compliance ledger shows the allowances and refusals as hash-chained records.</td></tr>
+      <tr><td>Documents</td><td><strong>285 scanned pages across 18 batches</strong>, read, classified, summarized and scored, with 80 pages queued for a person and the reason each one landed there recorded next to it.</td></tr>
+      <tr><td>Building a pipeline</td><td><strong>A four-step pipeline built on screen</strong>: pull an extract, normalize rows, a quality gate that reads the rejected row count, and publish to the lakehouse. Named, saved, versioned and attributed in the audit trail.</td></tr>
+      <tr><td>A pipeline in production</td><td><strong>A live graph read from the engine</strong>, with a real conditional branch and its run history.</td></tr>
+      <tr><td>Published to the public</td><td><strong>A school district transparency site on the same platform.</strong> Attendance charted against labeled axes and compared year over year, the whole page narrowed to one school, and small-population suppression that names exactly which schools, grades and measures were withheld rather than leaving a blank.</td></tr>
     </tbody>
   </table>
 
   <h2>Try the same thing yourself</h2>
-  <p>The tenant in the video is open. Nothing in the walkthrough requires an account, a trial, or a conversation with a salesperson.</p>
+  <p>The tenants in the video are open. Apart from the three signed-in segments noted below, nothing in the walkthrough requires an account, a trial, or a conversation with a salesperson.</p>
   <div class="gov honest">
     <ul>
-      <li><strong>The demonstration tenant:</strong> <a href="https://acme.vforce360.ai">acme.vforce360.ai</a>. Start at the catalog, then use Ask Mnemo.</li>
+      <li><strong>The lakehouse demonstration tenant:</strong> <a href="https://acme.vforce360.ai">acme.vforce360.ai</a>. Start at the catalog, open <code>acme.gold.attendance_chronic</code>, then use Ask Mnemo and put the same question to it.</li>
+      <li><strong>The published district site:</strong> <a href="https://rcsd-demo.vforce360.ai/dashboard">rcsd-demo.vforce360.ai</a>. Set School Building to a single school and watch the figures narrow and the small groups mask.</li>
       <li><strong>The platform front door:</strong> <a href="https://vforce360.ai">vforce360.ai</a>.</li>
       <li><strong>How Claude is used and governed across Edgent products:</strong> <a href="claude-case-study.html">the case study</a>.</li>
       <li><strong>Company:</strong> <a href="https://edgentllc.com">edgentllc.com</a>. Capability statement: <a href="https://edgentllc.com/capability-statement.pdf">capability-statement.pdf</a>.</li>
@@ -122,11 +122,12 @@
   <div class="gov">
     <ul>
       <li><strong>Edgent built and operates this.</strong> VForce360 is Edgent's own product, running on Edgent's own infrastructure. It is not a reseller demonstration and it is not a mockup.</li>
-      <li><strong>The data is synthetic.</strong> The district figures, the student records and the scanned pages are generated or public-domain material used for demonstration. No real student, patient or claimant data appears anywhere in the recording or on the tenant.</li>
-      <li><strong>Nothing was staged.</strong> The walkthrough was captured by driving a real browser against the live tenant. Page loads were trimmed at the head of each shot so the video is not padded with spinners; no result, latency or screen was altered, and nothing was sped up.</li>
-      <li><strong>Some things are deliberately absent.</strong> Screens that an anonymous session cannot reach, such as connector configuration and the itemized audit ledger, are not shown, because showing them would have meant signing in and the point of this recording is that you can reproduce it without an account.</li>
-      <li><strong>Accessibility.</strong> The walkthrough is captioned in WebVTT, captions are on by default, and both WebVTT and SRT are downloadable above. A version with open captions burned into the picture is available on request for players that ignore caption tracks.</li>
-    </ul>
+      <li><strong>The data is synthetic.</strong> The district figures, the student records and the scanned pages are generated or public-domain material used for demonstration. No real student, patient or claimant data appears anywhere in the recording or on the tenants.</li>
+      <li><strong>Nothing was staged or sped up.</strong> The walkthrough was captured by driving a real browser against live tenants. Page loads were trimmed at the head of each shot so the video is not padded with spinners, and the pipeline-building segment is cut between two beats of one continuous take. No result, latency or screen was altered, and no segment is played faster than it happened.</li>
+      <li><strong>Where sign-in is used, and why.</strong> Three segments are recorded signed in, because they cannot honestly be shown otherwise: the granted half of the access-control comparison, the decision-engine and ledger views behind it, and the pipeline being authored, which is a write that the public tenant deliberately refuses. The narration states this at the point it happens. Everything else needs no account.</li>
+      <li><strong>Charts were chosen for whether they are readable.</strong> Where a chart on a demonstration tenant renders without a usable axis or with every bar at the same length, it is not in this video. The published district site is used for the charting segment because its axes are labeled and its values are printed.</li>
+      <li><strong>Accessibility.</strong> Captions are burned into a dedicated band below the picture, so no caption ever covers the interface being described, and the delivered frame is 1920 by 1200 for that reason. WebVTT and SRT are downloadable above, and the WebVTT carries line positioning so a player that draws its own captions puts them in the band.</li>
+</ul>
   </div>
 
   <div class="contact">
