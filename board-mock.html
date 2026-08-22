@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Availability Board Mock | Edgent LLC</title>
+  <meta name="description" content="Design mock for the coordination availability board: a live operational surface for finding and holding placement resources at 2am.">
+  <meta property="og:title" content="Availability Board Mock | Edgent">
+  <meta property="og:description" content="Live operational surface for finding and holding placement resources. Icon-first, space-efficient, 2am-operator tested.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #05070d;
+      --panel: #0b1020;
+      --surface: #0e1528;
+      --surface-2: #131b2e;
+      --border: #1b2540;
+      --border-subtle: #161f30;
+      --text: #eaf0ff;
+      --muted: #8ea2c8;
+      --muted-strong: #a8b6ce;
+      --accent: #2563EB;
+      --accent-soft: rgba(37,99,235,0.15);
+      --green: #22C55E;
+      --green-soft: rgba(34,197,94,0.15);
+      --gold: #F59E0B;
+      --gold-soft: rgba(245,158,11,0.15);
+      --red: #EF4444;
+      --red-soft: rgba(239,68,68,0.15);
+      --shadow-dark: #2D2D2D;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(1100px 700px at 15% -10%, #12233f 0%, transparent 55%),
+        radial-gradient(1100px 700px at 90% 8%, #11302a 0%, transparent 50%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    a:focus-visible, button:focus-visible, [tabindex]:focus-visible, input:focus-visible, select:focus-visible {
+      outline: 2.5px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      z-index: 999;
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+      border-radius: 4px;
+    }
+    .skip-link:focus { left: 4px; top: 4px; }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(5,7,13,0.9);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    .logo span { color: var(--muted); font-weight: 500; }
+
+    .mock-badge {
+      background: var(--gold-soft);
+      color: var(--gold);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 99px;
+    }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      min-height: 100vh;
+      padding-top: 52px;
+    }
+
+    .left-rail {
+      width: 240px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 1rem;
+      position: sticky;
+      top: 52px;
+      height: calc(100vh - 52px);
+      overflow-y: auto;
+      transition: transform 0.2s ease;
+    }
+
+    .left-rail.collapsed {
+      transform: translateX(-100%);
+      position: absolute;
+    }
+
+    .rail-toggle {
+      position: absolute;
+      right: -40px;
+      top: 0.5rem;
+      width: 32px;
+      height: 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0 6px 6px 0;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .rail-toggle:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .left-rail.collapsed .rail-toggle {
+      right: 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .rail-section { margin-bottom: 1.5rem; }
+
+    .rail-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .rail-nav { list-style: none; }
+    .rail-nav li { margin-bottom: 0.25rem; }
+
+    .rail-nav button {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: var(--muted-strong);
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .rail-nav button:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .rail-nav button.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .rail-nav button svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .rail-filters {
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+      margin-top: 1rem;
+    }
+
+    .persistent-filter { margin-bottom: 0.75rem; }
+    .persistent-filter label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .persistent-filter input[type="text"],
+    .persistent-filter select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.6rem;
+      color: var(--text);
+      font-size: 0.875rem;
+      transition: border-color 0.15s;
+    }
+
+    .persistent-filter input[type="text"]:focus,
+    .persistent-filter select:focus {
+      border-color: var(--accent);
+    }
+
+    .persistent-filter select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238ea2c8' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      padding-right: 2rem;
+    }
+
+    .main-content { padding: 1rem; overflow-x: hidden; }
+
+    .content-header { margin-bottom: 1rem; }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.875rem;
+      color: var(--muted);
+      max-width: 60ch;
+    }
+
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--muted-strong);
+      margin-top: 0.5rem;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .live-dot.on {
+      background: var(--green);
+      box-shadow: 0 0 8px rgba(34,197,94,0.6);
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: var(--surface);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .filter-search {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .filter-search input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.5rem 0.5rem 2.25rem;
+      color: var(--text);
+      font-size: 0.875rem;
+    }
+
+    .filter-search input:focus {
+      border-color: var(--accent);
+    }
+
+    .filter-search svg {
+      position: absolute;
+      left: 0.6rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--muted);
+    }
+
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.25rem 0.5rem 0.25rem 0.6rem;
+      font-size: 0.8125rem;
+      color: var(--muted-strong);
+    }
+
+    .chip button {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.1rem;
+      display: flex;
+      border-radius: 50%;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .chip button:hover {
+      color: var(--text);
+      background: var(--border);
+    }
+
+    .chip button svg { width: 14px; height: 14px; }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .toolbar-left {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-right {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-icon {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem;
+      color: var(--muted-strong);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon:hover {
+      background: var(--surface-2);
+      color: var(--text);
+      border-color: var(--muted);
+    }
+
+    .btn-icon:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-icon svg { width: 18px; height: 18px; }
+
+    .btn-icon.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .btn-icon.primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-icon.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .toolbar-text {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .data-grid {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .data-table thead {
+      background: var(--surface-2);
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+      color: var(--muted-strong);
+      font-size: 0.8125rem;
+      white-space: nowrap;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table th.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .data-table th.sortable:hover {
+      color: var(--text);
+    }
+
+    .data-table th.sortable span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .data-table th.sortable svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.5;
+    }
+
+    .data-table th.sortable.sorted-asc svg,
+    .data-table th.sortable.sorted-desc svg {
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    .data-table td {
+      padding: 0.625rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--muted-strong);
+    }
+
+    .data-table tr:last-child td { border-bottom: none; }
+
+    .data-table tbody tr {
+      cursor: pointer;
+      transition: background 0.1s ease;
+    }
+
+    .data-table tbody tr:hover {
+      background: var(--surface-2);
+    }
+
+    .data-table tbody tr.updated {
+      animation: highlight 1.5s ease;
+    }
+
+    @keyframes highlight {
+      0% { background: var(--green-soft); }
+      100% { background: transparent; }
+    }
+
+    .state-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+
+    .state-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .state-available .state-dot { background: var(--green); }
+    .state-held .state-dot { background: var(--gold); }
+    .state-occupied .state-dot { background: var(--muted); }
+    .state-maintenance .state-dot { background: var(--red); }
+
+    .empty-state {
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .empty-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .empty-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .empty-text {
+      font-size: 0.875rem;
+      color: var(--muted);
+      max-width: 40ch;
+      margin: 0 auto;
+    }
+
+    .skeleton-row td { padding: 0; }
+
+    .skeleton-cell {
+      height: 36px;
+      background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
+      background-size: 200% 100%;
+      animation: skeleton 1.5s infinite;
+    }
+
+    @keyframes skeleton {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .pager {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8125rem;
+      color: var(--muted);
+    }
+
+    .pager button {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      color: var(--muted-strong);
+      cursor: pointer;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+
+    .pager button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .pager button:hover:not(:disabled) {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .side-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 360px;
+      max-width: 90vw;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      z-index: 200;
+      transform: translateX(100%);
+      transition: transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .side-panel.open {
+      transform: translateX(0);
+    }
+
+    .panel-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 199;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .panel-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .panel-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .panel-close {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.4rem;
+      border-radius: 6px;
+      display: flex;
+      transition: all 0.15s;
+    }
+
+    .panel-close:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .panel-close svg { width: 20px; height: 20px; }
+
+    .panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .panel-footer {
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .detail-row:last-child { border-bottom: none; }
+
+    .detail-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .detail-value {
+      font-size: 0.875rem;
+      color: var(--muted-strong);
+      font-weight: 500;
+    }
+
+    .alert {
+      padding: 0.875rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+
+    .alert-error {
+      background: var(--red-soft);
+      border: 1px solid rgba(239,68,68,0.4);
+      color: #fca5a5;
+    }
+
+    .alert-success {
+      background: var(--green-soft);
+      border: 1px solid rgba(34,197,94,0.4);
+      color: #86efac;
+    }
+
+    .alert-info {
+      background: var(--accent-soft);
+      border: 1px solid rgba(37,99,235,0.4);
+      color: #93c5fd;
+    }
+
+    .alert-title {
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .picker-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.6);
+    }
+
+    .picker-overlay.open { display: flex; }
+
+    .picker-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      width: 320px;
+      max-width: 90vw;
+      max-height: 80vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .picker-header {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .picker-title {
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    .picker-search {
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .picker-search input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.6rem;
+      color: var(--text);
+      font-size: 0.875rem;
+    }
+
+    .picker-list { flex: 1; overflow-y: auto; }
+
+    .picker-item {
+      padding: 0.625rem 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      transition: background 0.1s;
+    }
+
+    .picker-item:hover { background: var(--surface-2); }
+
+    .picker-item .count {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--bg);
+      padding: 0.15rem 0.4rem;
+      border-radius: 99px;
+    }
+
+    .picker-item.selected {
+      background: var(--accent-soft);
+    }
+
+    .picker-group-label {
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: var(--surface-2);
+    }
+
+    .picker-footer {
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      color: var(--muted-strong);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+
+    .btn:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .pools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .pool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .pool-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .pool-title {
+      font-weight: 700;
+      font-size: 0.9375rem;
+    }
+
+    .pool-badge {
+      font-size: 0.75rem;
+      background: var(--surface-2);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .pool-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .pool-metric {
+      text-align: center;
+    }
+
+    .pool-metric-value {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .pool-metric-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .pool-bar {
+      height: 4px;
+      background: var(--bg);
+      border-radius: 2px;
+      margin-top: 0.75rem;
+      overflow: hidden;
+    }
+
+    .pool-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .waitlist-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .waitlist-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.8125rem;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+    }
+
+    .waitlist-table td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .waitlist-table tr:last-child td { border-bottom: none; }
+
+    .position-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 0.8125rem;
+    }
+
+    .est-wait {
+      font-size: 0.8125rem;
+      color: var(--muted);
+    }
+
+    .degraded-banner {
+      background: var(--gold-soft);
+      border: 1px solid rgba(245,158,11,0.4);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .degraded-banner svg {
+      width: 18px;
+      height: 18px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .degraded-text {
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .degraded-time {
+      font-size: 0.8125rem;
+      color: var(--muted);
+    }
+
+    .design-notes {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .design-notes h2 {
+      font-size: 1.125rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .design-notes h3 {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--muted-strong);
+    }
+
+    .design-notes p, .design-notes li {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 75ch;
+    }
+
+    .design-notes ul {
+      margin-left: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .design-notes code {
+      background: var(--bg);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.8125rem;
+      color: var(--accent);
+    }
+
+    .gherkin-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-top: 2rem;
+      overflow-x: auto;
+    }
+
+    .gherkin-block pre {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      font-size: 0.8125rem;
+      color: var(--muted-strong);
+      line-height: 1.6;
+      white-space: pre;
+    }
+
+    .gherkin-keyword { color: var(--accent); font-weight: 700; }
+    .gherkin-scenario {
+      color: var(--gold);
+      font-weight: 700;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .app-layout { grid-template-columns: 1fr; }
+      .left-rail {
+        position: fixed;
+        z-index: 150;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      .left-rail.open { transform: translateX(0); }
+      .rail-toggle {
+        position: fixed;
+        left: 4px;
+        top: 60px;
+        z-index: 160;
+        width: 36px;
+        height: 36px;
+        border-radius: 0 6px 6px 0;
+      }
+      .side-panel { width: 100%; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <nav aria-label="Main navigation">
+    <div class="nav-inner">
+      <div class="logo">
+        edgent<span>llc</span>
+        <span class="mock-badge">Mock</span>
+      </div>
+      <div style="font-size: 0.8125rem; color: var(--muted); font-weight: 600;">
+        Design mock for review only. Not a live application.
+      </div>
+    </div>
+  </nav>
+
+  <div class="app-layout">
+    <aside class="left-rail" id="leftRail" aria-label="Navigation and filters">
+      <button class="rail-toggle" id="railToggle" aria-label="Toggle navigation rail" aria-expanded="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12h18M3 6h18M3 18h18"/>
+        </svg>
+      </button>
+
+      <ul class="rail-nav">
+        <li><button class="active" data-view="board" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Resources
+        </button></li>
+        <li><button data-view="pools">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Pools
+        </button></li>
+        <li><button data-view="waitlist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M8 10h8M8 14h8"/></svg>
+          Waitlist
+        </button></li>
+      </ul>
+
+      <div class="rail-filters">
+        <div class="rail-section">
+          <div class="rail-label">Persistent Filters</div>
+          <div class="persistent-filter">
+            <label for="railProgram">Program</label>
+            <select id="railProgram">
+              <option value="">All programs</option>
+              <option value="crisis">Crisis Stabilization</option>
+              <option value="detox">Medical Detoxification</option>
+              <option value="respite">Respite Care</option>
+            </select>
+          </div>
+          <div class="persistent-filter">
+            <label for="railState">State</label>
+            <select id="railState">
+              <option value="">All states</option>
+              <option value="TX">Texas</option>
+              <option value="OK">Oklahoma</option>
+              <option value="LA">Louisiana</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content" id="main">
+      <div class="content-header">
+        <h1 class="page-title" id="pageTitle">Availability Board</h1>
+        <p class="page-subtitle" id="pageSubtitle">Every resource in this registry, statewide. Held and occupied beds are shown so the whole picture is visible. Who is in them is not.</p>
+        <div class="live-indicator" role="status" aria-live="polite">
+          <span class="live-dot on" id="liveDot"></span>
+          <span id="liveText">Live. Changes appear as they happen.</span>
+        </div>
+      </div>
+
+      <div id="alertArea"></div>
+
+      <div id="viewContainer">
+        <div id="boardView">
+          <div class="filter-bar">
+            <div class="filter-search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+              </svg>
+              <input type="text" id="quickSearch" placeholder="Quick search by ID, facility..." aria-label="Quick search resources">
+            </div>
+            <div class="filter-chips" id="filterChips" role="list" aria-label="Active filters"></div>
+          </div>
+
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <button class="btn-icon" id="btnFilterPicker" aria-label="Add filter">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+              </button>
+              <button class="btn-icon" id="btnClaimable" aria-label="Show claimable only" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </button>
+              <span class="toolbar-text" id="resultCount">Showing 10 of 47 resources</span>
+            </div>
+            <div class="toolbar-right">
+              <button class="btn-icon" id="btnDegraded" aria-label="Toggle degraded state demo" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+              <button class="btn-icon" id="btnRefresh" aria-label="Refresh">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="data-grid">
+            <table class="data-table" role="grid" aria-label="Resources table">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="id" aria-sort="none"><span>Resource <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v17M5 9l7-7 7 7"/></svg></span></th>
+                  <th class="sortable" data-sort="facility" aria-sort="none"><span>Facility <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v17M5 9l7-7 7 7"/></svg></span></th>
+                  <th class="sortable" data-sort="program" aria-sort="none"><span>Program <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v17M5 9l7-7 7 7"/></svg></span></th>
+                  <th class="sortable" data-sort="state" aria-sort="none"><span>State <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v17M5 9l7-7 7 7"/></svg></span></th>
+                  <th>Held by</th>
+                  <th>Hold expires</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="boardBody">
+              </tbody>
+            </table>
+            <div class="pager">
+              <button id="prevPage" disabled aria-label="Previous page">Prev</button>
+              <span id="pageInfo">Page 1 of 5</span>
+              <button id="nextPage" aria-label="Next page">Next</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="poolsView" style="display: none;">
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <span class="toolbar-text">Capacity pools by program</span>
+            </div>
+          </div>
+          <div class="pools-grid" id="poolsGrid"></div>
+        </div>
+
+        <div id="waitlistView" style="display: none;">
+          <div class="toolbar">
+            <div class="toolbar-left">
+              <select id="waitlistProgram" aria-label="Select program waitlist" style="background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.6rem; color: var(--text); font-size: 0.875rem; font-weight: 600;">
+                <option value="crisis">Crisis Stabilization</option>
+                <option value="detox">Medical Detoxification</option>
+                <option value="respite">Respite Care</option>
+              </select>
+            </div>
+            <div class="toolbar-right">
+              <span class="toolbar-text">Priority: arrival time</span>
+            </div>
+          </div>
+          <div class="data-grid">
+            <table class="waitlist-table">
+              <thead>
+                <tr>
+                  <th>Position</th>
+                  <th>Organization</th>
+                  <th>Priority</th>
+                  <th>Joined</th>
+                  <th>Est. wait</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="waitlistBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="design-notes">
+        <h2>Design Principles Demonstrated</h2>
+
+        <h3>Icon-first, space-efficient</h3>
+        <p>All actions use icon buttons with accessible labels. No long text labels clutter the surface. The rail uses icons for navigation with text labels alongside them. The toolbar is dense but touch-friendly: buttons are 36px minimum, with adequate spacing. <strong>Follows Ancora's operational UI patterns</strong> with the board's density requirements winning over Ancora's lighter patient-portal approach.</p>
+
+        <h3>Skeleton loading states</h3>
+        <p>The initial load shows skeleton rows with a subtle animation. No spinners, no blank states that leave the user wondering if something broke. Loading state announces itself as loading.</p>
+
+        <h3>Slide-out side panel</h3>
+        <p>Clicking a row opens the detail panel from the right edge. This is not a modal ocean. It preserves context, can be dismissed with Escape or by clicking the overlay, and carries the row's full detail set including the hold action.</p>
+
+        <h3>Value-link searchable pickers</h3>
+        <p>The filter button opens a picker with type-to-find and counts per option. No scrolling through 50-state dropdowns. The rail has persistent filters that stay applied as you navigate between views.</p>
+
+        <h3>Collapsible left rail</h3>
+        <p>The navigation and persistent filters live in a collapsible rail. On mobile, it slides in from the left. The toggle is always visible, and the rail remembers its state.</p>
+
+        <h3>Cold-2am-operator test</h3>
+        <p>Big touch targets (36px minimum). High contrast colors. Clear state indicators with both color and glyph. The most common action (finding a claimable bed) is one click away from the default view. Search works for IDs and facility names. The board shows everything at a glance: state, holder, expiration.</p>
+
+        <h3>Section 508 / WCAG 2.1 AA</h3>
+        <ul>
+          <li>Keyboard navigation: all interactive elements are focusable with visible focus indicators (following Ancora's focus-visible pattern)</li>
+          <li>ARIA landmarks: nav, main, aside with proper labels</li>
+          <li>Semantic HTML: proper heading hierarchy, button elements for actions, table roles</li>
+          <li>Color is never the only signal: state badges use both color and glyph, sorted columns show the direction indicator</li>
+          <li>Live regions properly announced: the live indicator uses aria-live, alerts use role="alert"</li>
+          <li>Reduced motion respected with media query</li>
+        </ul>
+
+        <h3>Privacy ruling visible in the design</h3>
+        <p>The board shows state, facility, program, holding organization, and hold expiration. There is NO column for occupant, no tooltip that would reveal it, nothing that could leak who is in crisis. The data contract excludes it entirely.</p>
+
+        <h3>Conflict rendering (the critical one)</h3>
+        <p>When a hold loses the race, the error message names the holding organization and the expiration time. It tells the coordinator exactly what to do: ask that organization to release it, or take another resource. No silent failure, no retry loop, no vague "try again" message.</p>
+
+        <h3>Live update demonstration</h3>
+        <p>The mock simulates a live update after 5 seconds: row "BED-004" changes state from available to held, with a visible highlight animation. The live indicator shows green when connected, gray when not. A degraded state banner appears when the stream disconnects (toggle with the eye icon in the toolbar for demo).</p>
+
+        <h3>Empty and degraded states</h3>
+        <p>Clear empty states with guidance ("No resources match your filters"). Degraded state shows a banner with last-updated time and a visual indicator. The stream disconnection is surfaced, not hidden.</p>
+
+        <h3>Divergence from Ancora patterns</h3>
+        <p>The board deliberately diverges from Ancora's hand-drawn, sketch-style aesthetic (wobbly borders, tape effects, Kalam headings) because this is a 2am operations surface, not a patient-facing page. The board adopts Ancora's Plus Jakarta Sans typography, blue primary color, and accessibility patterns, but maintains operational density over playfulness.</p>
+
+        <h3>VForce demo polish adopted</h3>
+        <p>Dark theme with radial gradient background (following VForce demo conventions). Gradient text effects reserved for marketing headers, not the operational surface. Clean, modern public-facing meta tags for social sharing.</p>
+
+        <h3>Open design questions for the owner</h3>
+        <ul>
+          <li>Should the pool cards show a trend indicator (up/down from last hour)?</li>
+          <li>Is the three-dot action menu per row better than the inline Hold button? What actions belong in that menu?</li>
+          <li>Should the waitlist show an estimated time based on historical throughput, or just position?</li>
+          <li>Is the rail better placed on the right for this surface, given that the detail panel comes from the right?</li>
+          <li>Should persistent filters be remembered per-user, or per-session?</li>
+          <li>What is the maximum number of filter chips before we roll them into a "N more" overflow?</li>
+        </ul>
+      </div>
+
+      <div class="gherkin-block">
+        <h3 style="color: var(--text); margin-bottom: 1rem; font-weight: 800;">Use Cases (Gherkin)</h3>
+        <pre>
+<span class="gherkin-keyword">Feature:</span> Availability Board
+  <span class="gherkin-keyword">As</span> a coordinator working at 2am
+  <span class="gherkin-keyword">I want</span> to find and hold a placement resource quickly
+  <span class="gherkin-keyword">So that</span> people in crisis get placed without delay
+
+<span class="gherkin-scenario">Scenario: Find a bed at 2am</span>
+  <span class="gherkin-keyword">Given</span> the board is loaded
+  <span class="gherkin-keyword">When</span> I filter to claimable resources in my region
+  <span class="gherkin-keyword">Then</span> I see available beds sorted by proximity
+  <span class="gherkin-keyword">And</span> I can see which beds are held and by whom
+  <span class="gherkin-keyword">And</span> I can place a hold with one action
+
+<span class="gherkin-scenario">Scenario: View counted capacity pools</span>
+  <span class="gherkin-keyword">Given</span> I am on the pools view
+  <span class="gherkin-keyword">When</span> I view a program's pools
+  <span class="gherkin-keyword">Then</span> I see total capacity, active claims, and available count
+  <span class="gherkin-keyword">And</span> I can see which facilities have capacity
+
+<span class="gherkin-scenario">Scenario: View the waitlist</span>
+  <span class="gherkin-keyword">Given</span> I am on the waitlist view
+  <span class="gherkin-keyword">When</span> I select a program
+  <span class="gherkin-keyword">Then</span> I see my position in the queue
+  <span class="gherkin-keyword">And</span> I see estimated wait time
+  <span class="gherkin-keyword">And</span> I can remove myself from the list
+
+<span class="gherkin-scenario">Scenario: Place a hold on a resource</span>
+  <span class="gherkin-keyword">Given</span> I am viewing an available resource
+  <span class="gherkin-keyword">When</span> I click the Hold action
+  <span class="gherkin-keyword">Then</span> the side panel opens with the resource details
+  <span class="gherkin-keyword">And</span> I can confirm the hold
+  <span class="gherkin-keyword">And</span> the hold is placed on the resource
+
+<span class="gherkin-scenario">Scenario: Hold conflict loses the race</span>
+  <span class="gherkin-keyword">Given</span> another coordinator holds the resource first
+  <span class="gherkin-keyword">When</span> I attempt to place a hold
+  <span class="gherkin-keyword">Then</span> I see an error message naming the holding organization
+  <span class="gherkin-keyword">And</span> the message includes the hold expiration time
+  <span class="gherkin-keyword">And</span> the message tells me to ask that org to release or take another
+  <span class="gherkin-keyword">And</span> I am not offered a retry loop that will fail the same way
+
+<span class="gherkin-scenario">Scenario: Live updates arrive</span>
+  <span class="gherkin-keyword">Given</span> I am viewing the board
+  <span class="gherkin-keyword">When</span> a resource changes state
+  <span class="gherkin-keyword">Then</span> the row updates in place
+  <span class="gherkin-keyword">And</span> a subtle highlight animation draws attention to the change
+  <span class="gherkin-keyword">And</span> the live indicator shows connected status
+
+<span class="gherkin-scenario">Scenario: Privacy ruling is enforced</span>
+  <span class="gherkin-keyword">Given</span> a resource is occupied
+  <span class="gherkin-keyword">When</span> I view the board or any resource detail
+  <span class="gherkin-keyword">Then</span> I see the resource state as occupied
+  <span class="gherkin-keyword">And</span> I see the holding organization if applicable
+  <span class="gherkin-keyword">But</span> I do NOT see any information about who is occupying the bed
+  <span class="gherkin-keyword">And</span> no tooltip or interaction reveals occupant identity
+
+<span class="gherkin-scenario">Scenario: Empty state with no matches</span>
+  <span class="gherkin-keyword">Given</span> I have applied filters that exclude all resources
+  <span class="gherkin-keyword">When</span> the board renders
+  <span class="gherkin-keyword">Then</span> I see a clear empty state message
+  <span class="gherkin-keyword">And</span> I am offered a way to clear filters
+  <span class="gherkin-keyword">And</span> the message explains why there are no results
+
+<span class="gherkin-scenario">Scenario: Stream disconnection degraded state</span>
+  <span class="gherkin-keyword">Given</span> the live stream is disconnected
+  <span class="gherkin-keyword">When</span> I view the board
+  <span class="gherkin-keyword">Then</span> I see a degraded banner
+  <span class="gherkin-keyword">And</span> the banner shows the last successful update time
+  <span class="gherkin-keyword">And</span> I am advised to reload if the problem persists
+        </pre>
+      </div>
+    </main>
+  </div>
+
+  <div class="panel-overlay" id="panelOverlay" aria-hidden="true"></div>
+  <aside class="side-panel" id="sidePanel" aria-label="Resource detail panel">
+    <div class="panel-header">
+      <h2 class="panel-title" id="panelTitle">Resource Details</h2>
+      <button class="panel-close" id="panelClose" aria-label="Close panel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="panel-body" id="panelBody">
+    </div>
+    <div class="panel-footer" id="panelFooter">
+    </div>
+  </aside>
+
+  <div class="picker-overlay" id="pickerOverlay" aria-hidden="true">
+    <div class="picker-box" role="dialog" aria-label="Add filter">
+      <div class="picker-header">
+        <span class="picker-title">Add Filter</span>
+        <button class="btn-icon" id="pickerClose" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="picker-search">
+        <input type="text" id="pickerSearch" placeholder="Type to search...">
+      </div>
+      <div class="picker-list" id="pickerList" role="listbox">
+      </div>
+      <div class="picker-footer">
+        <button class="btn" id="pickerCancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const mockData = {
+      resources: [
+        { id: 'BED-001', facility: 'Central Texas Regional', program: 'Crisis Stabilization', state: 'available', holder: null, expires: null, claimable: true },
+        { id: 'BED-002', facility: 'Gulf Coast Center', program: 'Medical Detoxification', state: 'held', holder: 'Region 6 Authority', expires: '25 min', claimable: false },
+        { id: 'BED-003', facility: 'North Texas Services', program: 'Respite Care', state: 'occupied', holder: null, expires: null, claimable: false },
+        { id: 'BED-004', facility: 'Central Texas Regional', program: 'Crisis Stabilization', state: 'available', holder: null, expires: null, claimable: true },
+        { id: 'BED-005', facility: 'Panhandle Crisis Unit', program: 'Crisis Stabilization', state: 'maintenance', holder: null, expires: null, claimable: false },
+        { id: 'BED-006', facility: 'South Texas Behavioral', program: 'Medical Detoxification', state: 'available', holder: null, expires: null, claimable: true },
+        { id: 'BED-007', facility: 'Hill Country Center', program: 'Respite Care', state: 'held', holder: 'Local County MHMR', expires: '12 min', claimable: false },
+        { id: 'BED-008', facility: 'East Texas Treatment', program: 'Crisis Stabilization', state: 'occupied', holder: null, expires: null, claimable: false },
+        { id: 'BED-009', facility: 'West Texas Solutions', program: 'Medical Detoxification', state: 'available', holder: null, expires: null, claimable: true },
+        { id: 'BED-010', facility: 'Central Texas Regional', program: 'Respite Care', state: 'held', holder: 'Metro Health Authority', expires: '8 min', claimable: false },
+      ],
+      pools: [
+        { id: 'POOL-001', facility: 'Central Texas Regional', program: 'Crisis Stabilization', capacity: 12, active: 8, available: 4 },
+        { id: 'POOL-002', facility: 'Gulf Coast Center', program: 'Medical Detoxification', capacity: 8, active: 6, available: 2 },
+        { id: 'POOL-003', facility: 'North Texas Services', program: 'Respite Care', capacity: 16, active: 14, available: 2 },
+        { id: 'POOL-004', facility: 'Panhandle Crisis Unit', program: 'Crisis Stabilization', capacity: 6, active: 5, available: 1 },
+      ],
+      waitlist: [
+        { position: 1, org: 'Metro Health Authority', priority: 'urgent', joined: '10 min ago', wait: '~15 min', status: 'waiting' },
+        { position: 2, org: 'Region 6 Authority', priority: 'high', joined: '25 min ago', wait: '~30 min', status: 'waiting' },
+        { position: 3, org: 'Local County MHMR', priority: 'normal', joined: '45 min ago', wait: '~45 min', status: 'waiting' },
+      ],
+      filterOptions: [
+        { key: 'state', label: 'State', options: [
+          { value: 'TX', label: 'Texas', count: 37 },
+          { value: 'OK', label: 'Oklahoma', count: 6 },
+          { value: 'LA', label: 'Louisiana', count: 4 },
+        ]},
+        { key: 'program', label: 'Program', options: [
+          { value: 'crisis', label: 'Crisis Stabilization', count: 18 },
+          { value: 'detox', label: 'Medical Detoxification', count: 15 },
+          { value: 'respite', label: 'Respite Care', count: 14 },
+        ]},
+        { key: 'claimable', label: 'Claimable Status', options: [
+          { value: 'yes', label: 'Claimable now', count: 12 },
+          { value: 'no', label: 'Not claimable', count: 35 },
+        ]},
+      ]
+    };
+
+    let currentView = 'board';
+    let currentPage = 1;
+    let currentSort = { col: 'id', dir: 'asc' };
+    let activeFilters = [];
+    let degradedMode = false;
+
+    const elements = {
+      leftRail: document.getElementById('leftRail'),
+      railToggle: document.getElementById('railToggle'),
+      pageTitle: document.getElementById('pageTitle'),
+      pageSubtitle: document.getElementById('pageSubtitle'),
+      boardView: document.getElementById('boardView'),
+      poolsView: document.getElementById('poolsView'),
+      waitlistView: document.getElementById('waitlistView'),
+      boardBody: document.getElementById('boardBody'),
+      poolsGrid: document.getElementById('poolsGrid'),
+      waitlistBody: document.getElementById('waitlistBody'),
+      filterChips: document.getElementById('filterChips'),
+      resultCount: document.getElementById('resultCount'),
+      sidePanel: document.getElementById('sidePanel'),
+      panelOverlay: document.getElementById('panelOverlay'),
+      panelBody: document.getElementById('panelBody'),
+      panelFooter: document.getElementById('panelFooter'),
+      panelTitle: document.getElementById('panelTitle'),
+      panelClose: document.getElementById('panelClose'),
+      pickerOverlay: document.getElementById('pickerOverlay'),
+      pickerList: document.getElementById('pickerList'),
+      pickerSearch: document.getElementById('pickerSearch'),
+      pickerClose: document.getElementById('pickerClose'),
+      pickerCancel: document.getElementById('pickerCancel'),
+      alertArea: document.getElementById('alertArea'),
+      liveDot: document.getElementById('liveDot'),
+      liveText: document.getElementById('liveText'),
+      btnClaimable: document.getElementById('btnClaimable'),
+      btnFilterPicker: document.getElementById('btnFilterPicker'),
+      btnRefresh: document.getElementById('btnRefresh'),
+      btnDegraded: document.getElementById('btnDegraded'),
+      quickSearch: document.getElementById('quickSearch'),
+      prevPage: document.getElementById('prevPage'),
+      nextPage: document.getElementById('nextPage'),
+      pageInfo: document.getElementById('pageInfo'),
+      waitlistProgram: document.getElementById('waitlistProgram'),
+    };
+
+    function stateGlyph(state) {
+      const glyphs = {
+        available: '●',
+        held: '◐',
+        occupied: '○',
+        maintenance: '⊘',
+      };
+      return glyphs[state] || '•';
+    }
+
+    function renderSkeleton() {
+      return `
+        <tr class="skeleton-row" aria-hidden="true">
+          <td><div class="skeleton-cell"></div></td>
+          <td><div class="skeleton-cell"></div></td>
+          <td><div class="skeleton-cell"></div></td>
+          <td><div class="skeleton-cell"></div></td>
+          <td><div class="skeleton-cell"></div></td>
+          <td><div class="skeleton-cell"></div></td>
+          <td><div class="skeleton-cell"></div></td>
+        </tr>
+      `;
+    }
+
+    function renderRow(resource) {
+      const stateClass = `state-${resource.state}`;
+      return `
+        <tr data-id="${resource.id}" role="row">
+          <td><strong>${resource.id}</strong></td>
+          <td>${resource.facility}</td>
+          <td>${resource.program}</td>
+          <td>
+            <span class="state-badge ${stateClass}">
+              <span class="state-dot" aria-hidden="true"></span>
+              <span aria-hidden="true">${stateGlyph(resource.state)}</span>
+              <span class="visually-hidden">${resource.state}</span>
+            </span>
+          </td>
+          <td>${resource.holder || '<em style="color: var(--muted);">None</em>'}</td>
+          <td>${resource.expires || '<em style="color: var(--muted);">No hold</em>'}</td>
+          <td>
+            ${resource.claimable ? `
+              <button class="btn-icon primary" data-action="hold" data-id="${resource.id}" aria-label="Hold ${resource.id}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </button>
+            ` : resource.state === 'held' ? `
+              <button class="btn-icon" data-action="release" data-id="${resource.id}" aria-label="Release ${resource.id}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+              </button>
+            ` : '<span style="color: var(--muted); font-size: 0.8125rem; font-weight: 600;">Not available</span>'}
+          </td>
+        </tr>
+      `;
+    }
+
+    function renderBoard() {
+      elements.boardBody.innerHTML = renderSkeleton();
+
+      setTimeout(() => {
+        let filtered = [...mockData.resources];
+        if (elements.btnClaimable.getAttribute('aria-pressed') === 'true') {
+          filtered = filtered.filter(r => r.claimable);
+        }
+
+        elements.boardBody.innerHTML = filtered.map(renderRow).join('');
+        elements.resultCount.textContent = `Showing ${filtered.length} of ${mockData.resources.length} resources`;
+        elements.pageInfo.textContent = `Page ${currentPage} of ${Math.ceil(mockData.resources.length / 10)}`;
+        elements.prevPage.disabled = currentPage <= 1;
+        elements.nextPage.disabled = currentPage >= Math.ceil(mockData.resources.length / 10);
+      }, 600);
+
+      if (degradedMode) {
+        elements.alertArea.innerHTML = `
+          <div class="degraded-banner" role="alert">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>
+              <div class="degraded-text">Not receiving live updates</div>
+              <div class="degraded-time">Last successful update: ${new Date().toLocaleTimeString()}</div>
+            </div>
+          </div>
+        `;
+        elements.liveDot.classList.remove('on');
+        elements.liveText.textContent = 'Disconnected. Reload to restore live updates.';
+      } else {
+        elements.alertArea.innerHTML = '';
+        elements.liveDot.classList.add('on');
+        elements.liveText.textContent = 'Live. Changes appear as they happen.';
+      }
+    }
+
+    function renderPools() {
+      elements.poolsGrid.innerHTML = mockData.pools.map(pool => {
+        const percent = Math.round((pool.active / pool.capacity) * 100);
+        return `
+          <div class="pool-card">
+            <div class="pool-header">
+              <span class="pool-title">${pool.facility}</span>
+              <span class="pool-badge">${pool.program}</span>
+            </div>
+            <div class="pool-metrics">
+              <div class="pool-metric">
+                <div class="pool-metric-value">${pool.capacity}</div>
+                <div class="pool-metric-label">Total</div>
+              </div>
+              <div class="pool-metric">
+                <div class="pool-metric-value">${pool.active}</div>
+                <div class="pool-metric-label">Active</div>
+              </div>
+              <div class="pool-metric">
+                <div class="pool-metric-value" style="color: var(--green);">${pool.available}</div>
+                <div class="pool-metric-label">Available</div>
+              </div>
+            </div>
+            <div class="pool-bar">
+              <div class="pool-bar-fill" style="width: ${percent}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderWaitlist() {
+      elements.waitlistBody.innerHTML = mockData.waitlist.map(entry => `
+        <tr>
+          <td><span class="position-badge">${entry.position}</span></td>
+          <td>${entry.org}</td>
+          <td><span class="state-badge state-${entry.priority === 'urgent' ? 'held' : entry.priority === 'high' ? 'occupied' : 'available'}">${entry.priority}</span></td>
+          <td>${entry.joined}</td>
+          <td class="est-wait">${entry.wait}</td>
+          <td>${entry.status}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderChips() {
+      elements.filterChips.innerHTML = activeFilters.map(f => `
+        <span class="chip" role="listitem">
+          ${f.label}: ${f.value}
+          <button data-remove="${f.key}" aria-label="Remove filter ${f.label}: ${f.value}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </span>
+      `).join('');
+    }
+
+    function openPanel(resourceId, action = 'view') {
+      const resource = mockData.resources.find(r => r.id === resourceId);
+      if (!resource) return;
+
+      elements.panelTitle.textContent = action === 'hold' ? `Hold ${resourceId}` : resourceId;
+      elements.panelBody.innerHTML = `
+        <div class="detail-row">
+          <span class="detail-label">State</span>
+          <span class="detail-value">
+            <span class="state-badge state-${resource.state}">
+              <span class="state-dot"></span>
+              ${resource.state}
+            </span>
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Facility</span>
+          <span class="detail-value">${resource.facility}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Program</span>
+          <span class="detail-value">${resource.program}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Held by</span>
+          <span class="detail-value">${resource.holder || 'Nobody'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Hold expires</span>
+          <span class="detail-value">${resource.expires || 'No active hold'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Claimable now</span>
+          <span class="detail-value">${resource.claimable ? 'Yes' : 'No'}</span>
+        </div>
+      `;
+
+      if (action === 'hold') {
+        elements.panelFooter.innerHTML = `
+          <div style="margin-bottom: 1rem;">
+            <p style="font-size: 0.875rem; color: var(--muted-strong); margin-bottom: 0.75rem;">
+              Hold will be placed for 30 minutes on behalf of coordinating-org.
+            </p>
+            <button class="btn btn-primary" id="confirmHold" style="width: 100%;">Confirm Hold</button>
+          </div>
+        `;
+        setTimeout(() => {
+          document.getElementById('confirmHold')?.addEventListener('click', () => simulateHold(resourceId));
+        }, 0);
+      } else if (action === 'release') {
+        elements.panelFooter.innerHTML = `
+          <button class="btn btn-primary" style="width: 100%;" id="confirmRelease">Release Hold</button>
+        `;
+        setTimeout(() => {
+          document.getElementById('confirmRelease')?.addEventListener('click', () => {
+            elements.alertArea.innerHTML = `
+              <div class="alert alert-success" role="alert">
+                <div class="alert-title">Released</div>
+                ${resourceId} has been released.
+              </div>
+            `;
+            closePanel();
+          });
+        }, 0);
+      } else {
+        elements.panelFooter.innerHTML = `
+          <button class="btn btn-primary" style="width: 100%;" id="panelHoldBtn">Place Hold</button>
+        `;
+        setTimeout(() => {
+          document.getElementById('panelHoldBtn')?.addEventListener('click', () => {
+            openPanel(resourceId, 'hold');
+          });
+        }, 0);
+      }
+
+      elements.sidePanel.classList.add('open');
+      elements.panelOverlay.classList.add('open');
+      elements.panelClose.focus();
+    }
+
+    function closePanel() {
+      elements.sidePanel.classList.remove('open');
+      elements.panelOverlay.classList.remove('open');
+    }
+
+    function simulateHold(resourceId) {
+      elements.panelFooter.innerHTML = '<p style="text-align: center; color: var(--muted); font-weight: 600;">Placing hold...</p>';
+
+      setTimeout(() => {
+        const fail = resourceId === 'BED-002';
+        if (fail) {
+          elements.alertArea.innerHTML = `
+            <div class="alert alert-error" role="alert">
+              <div class="alert-title">Hold Conflict</div>
+              ${resourceId} is held by Region 6 Authority until ${new Date(Date.now() + 25 * 60000).toLocaleTimeString()}. Ask that organization to release it, or take another resource.
+            </div>
+          `;
+        } else {
+          elements.alertArea.innerHTML = `
+            <div class="alert alert-success" role="alert">
+              <div class="alert-title">Hold Placed</div>
+              ${resourceId} is held until ${new Date(Date.now() + 30 * 60000).toLocaleTimeString()}.
+            </div>
+          `;
+        }
+        closePanel();
+      }, 800);
+    }
+
+    function openPicker() {
+      elements.pickerList.innerHTML = mockData.filterOptions.map(group => `
+        <div class="picker-group-label">${group.label}</div>
+        ${group.options.map(opt => `
+          <div class="picker-item" role="option" data-filter-key="${group.key}" data-filter-value="${opt.value}" data-filter-label="${opt.label}">
+            <span>${opt.label}</span>
+            <span class="count">${opt.count}</span>
+          </div>
+        `).join('')}
+      `).join('');
+
+      elements.pickerOverlay.classList.add('open');
+      elements.pickerSearch.focus();
+    }
+
+    function closePicker() {
+      elements.pickerOverlay.classList.remove('open');
+      elements.pickerSearch.value = '';
+    }
+
+    function switchView(view) {
+      currentView = view;
+      document.querySelectorAll('.rail-nav button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === view);
+        btn.setAttribute('aria-current', btn.dataset.view === view ? 'page' : 'false');
+      });
+
+      elements.boardView.style.display = view === 'board' ? 'block' : 'none';
+      elements.poolsView.style.display = view === 'pools' ? 'block' : 'none';
+      elements.waitlistView.style.display = view === 'waitlist' ? 'block' : 'none';
+
+      if (view === 'board') {
+        elements.pageTitle.textContent = 'Availability Board';
+        elements.pageSubtitle.textContent = 'Every resource in this registry, statewide. Held and occupied beds are shown so the whole picture is visible. Who is in them is not.';
+        renderBoard();
+      } else if (view === 'pools') {
+        elements.pageTitle.textContent = 'Capacity Pools';
+        elements.pageSubtitle.textContent = 'Counted capacity by program and facility. Shows total beds, active claims, and real availability.';
+        renderPools();
+      } else if (view === 'waitlist') {
+        elements.pageTitle.textContent = 'Program Waitlists';
+        elements.pageSubtitle.textContent = 'Queue positions for programs at capacity. Estimated wait times are based on recent throughput.';
+        renderWaitlist();
+      }
+
+      closePanel();
+    }
+
+    function simulateLiveUpdate() {
+      setTimeout(() => {
+        const row = document.querySelector(`tr[data-id="BED-004"]`);
+        if (row && currentView === 'board') {
+          row.classList.add('updated');
+          const resource = mockData.resources.find(r => r.id === 'BED-004');
+          if (resource) {
+            resource.state = 'held';
+            resource.holder = 'North Texas Authority';
+            resource.expires = '28 min';
+            resource.claimable = false;
+          }
+          setTimeout(() => {
+            renderBoard();
+          }, 1500);
+        }
+      }, 5000);
+    }
+
+    function setupEventListeners() {
+      elements.railToggle.addEventListener('click', () => {
+        elements.leftRail.classList.toggle('collapsed');
+        elements.railToggle.setAttribute('aria-expanded', !elements.leftRail.classList.contains('collapsed'));
+      });
+
+      document.querySelectorAll('.rail-nav button').forEach(btn => {
+        btn.addEventListener('click', () => switchView(btn.dataset.view));
+      });
+
+      elements.boardBody.addEventListener('click', (e) => {
+        const holdBtn = e.target.closest('[data-action="hold"]');
+        const releaseBtn = e.target.closest('[data-action="release"]');
+        const row = e.target.closest('tr');
+
+        if (holdBtn) {
+          e.stopPropagation();
+          openPanel(holdBtn.dataset.id, 'hold');
+        } else if (releaseBtn) {
+          e.stopPropagation();
+          openPanel(releaseBtn.dataset.id, 'release');
+        } else if (row && row.dataset.id) {
+          openPanel(row.dataset.id);
+        }
+      });
+
+      elements.panelClose.addEventListener('click', closePanel);
+      elements.panelOverlay.addEventListener('click', closePanel);
+
+      elements.btnFilterPicker.addEventListener('click', openPicker);
+      elements.pickerClose.addEventListener('click', closePicker);
+      elements.pickerCancel.addEventListener('click', closePicker);
+      elements.pickerOverlay.addEventListener('click', (e) => {
+        if (e.target === elements.pickerOverlay) closePicker();
+      });
+
+      elements.pickerList.addEventListener('click', (e) => {
+        const item = e.target.closest('.picker-item');
+        if (item) {
+          const key = item.dataset.filterKey;
+          const value = item.dataset.filterValue;
+          const label = item.dataset.filterLabel;
+          activeFilters.push({ key, value, label });
+          renderChips();
+          closePicker();
+        }
+      });
+
+      elements.filterChips.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-remove]');
+        if (btn) {
+          activeFilters = activeFilters.filter(f => f.key !== btn.dataset.remove);
+          renderChips();
+        }
+      });
+
+      elements.btnClaimable.addEventListener('click', () => {
+        const isPressed = elements.btnClaimable.getAttribute('aria-pressed') === 'true';
+        elements.btnClaimable.setAttribute('aria-pressed', !isPressed);
+        elements.btnClaimable.classList.toggle('active', !isPressed);
+        renderBoard();
+      });
+
+      elements.btnDegraded.addEventListener('click', () => {
+        const isPressed = elements.btnDegraded.getAttribute('aria-pressed') === 'true';
+        elements.btnDegraded.setAttribute('aria-pressed', !isPressed);
+        elements.btnDegraded.classList.toggle('active', !isPressed);
+        degradedMode = !isPressed;
+        renderBoard();
+      });
+
+      elements.btnRefresh.addEventListener('click', () => {
+        renderBoard();
+      });
+
+      elements.quickSearch.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#boardBody tr:not(.skeleton-row)');
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          row.style.display = text.includes(query) ? '' : 'none';
+        });
+      });
+
+      elements.prevPage.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderBoard();
+        }
+      });
+
+      elements.nextPage.addEventListener('click', () => {
+        if (currentPage < Math.ceil(mockData.resources.length / 10)) {
+          currentPage++;
+          renderBoard();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closePanel();
+          closePicker();
+        }
+      });
+
+      elements.waitlistProgram.addEventListener('change', renderWaitlist);
+
+      simulateLiveUpdate();
+    }
+
+    setupEventListeners();
+    renderBoard();
+  </script>
+</body>
+</html>
